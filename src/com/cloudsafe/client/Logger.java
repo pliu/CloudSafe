@@ -10,8 +10,21 @@ import java.util.Date;
 
 public final class Logger {
 	
+	private static String LOG_PATH = System.getProperty ("user.home") + "\\Desktop\\CloudSafe\\cs.log";
+	private static Logger logger = null;
+	
+	private Logger () {}
+	
+	public static final Logger getLogger () {
+		if (logger == null) {
+			logger = new Logger();
+			return logger;
+		}
+		return null;
+	}
+	
 	public static final void log (String errorMsg) {
-		File logFile = new File (Settings.getLogPath());
+		File logFile = new File (LOG_PATH);
 		logFile.getParentFile().mkdirs();
 		try {
 			if (logFile.exists()) {
@@ -26,8 +39,23 @@ public final class Logger {
 		}
 	}
 	
+	public final boolean changeLogPath (String newPath) {
+		if (isValidPath (newPath)) {
+			File oldLog = new File (LOG_PATH);
+		    oldLog.renameTo (new File (newPath));
+			LOG_PATH = newPath;
+			return true;
+		}
+		return false;
+	}
+	
+	private final boolean isValidPath (String path) {
+		return true;
+	}
+	
 	public static void main (String[] args) {
-		log ("testing");
+		//Testing logging event
+		log ("Testing");
 	}
 	
 }

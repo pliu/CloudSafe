@@ -11,11 +11,10 @@ public class DropboxAuthenticator {
 	private static String ACCESS_TOKEN = null;
 	
 	public final String getToken () {
-		DbxAppInfo appInfo = new DbxAppInfo(APP_KEY, APP_SECRET);
+		DbxAppInfo appInfo = new DbxAppInfo (APP_KEY, APP_SECRET);
 
-        DbxRequestConfig config = new DbxRequestConfig(
-            "CloudSafe/0.01", Locale.getDefault().toString());
-        DbxWebAuthNoRedirect webAuth = new DbxWebAuthNoRedirect(config, appInfo);
+        DbxRequestConfig config = new DbxRequestConfig ("CloudSafe/0.01", Locale.getDefault().toString());
+        DbxWebAuthNoRedirect webAuth = new DbxWebAuthNoRedirect (config, appInfo);
         
         String authorizeUrl = webAuth.start();
 		
