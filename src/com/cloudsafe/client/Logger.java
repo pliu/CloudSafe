@@ -27,9 +27,7 @@ public final class Logger {
 		File logFile = new File (LOG_PATH);
 		logFile.getParentFile().mkdirs();
 		try {
-			if (logFile.exists()) {
-				logFile.createNewFile();
-			}
+			logFile.createNewFile(); // Already checks if file exists
 			PrintWriter out = new PrintWriter (new BufferedWriter (new FileWriter (logFile, true)));
 		    out.println("(" + new Timestamp (new Date().getTime()).toString() + ") " + errorMsg);
 		    out.close();

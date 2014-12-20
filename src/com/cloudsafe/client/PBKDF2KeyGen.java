@@ -8,7 +8,7 @@ public final class PBKDF2KeyGen {
 	private static final int MIN_SALT_LENGTH = 128; // in bits
 	private static final int MIN_ITERATIONS = (int) Math.pow (2,17);
 	
-	public static final Key getPBKDF2Key (String passphrase, byte[] salt, int keyLength, int iterations) {
+	protected static final byte[] getPBKDF2Key (String passphrase, byte[] salt, int keyLength, int iterations) {
 		if (passphrase == null || passphrase.length() < 1) {
 			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Passphrase was either null or empty.");
 			return null;
@@ -18,16 +18,17 @@ public final class PBKDF2KeyGen {
 			return null;
 		}
 		if (salt.length < MIN_SALT_LENGTH/8)  {
-			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Salt length was " + salt.length*8 +
-					" (salt length must be greater than or equal to " + MIN_SALT_LENGTH + ").");
+			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Salt length was " + salt.length*8 + " bits (salt"
+					+ " length must be greater than or equal to " + MIN_SALT_LENGTH + ").");
 			return null;
 		}
 		if (iterations < MIN_ITERATIONS) {
-			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Iterations input was " + iterations +
-					" (iterations must be greater than or equal to " + MIN_ITERATIONS + ").");
+			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Iterations input was " + iterations + " (iterations"
+					+ " must be greater than or equal to " + MIN_ITERATIONS + ").");
 			return null;
 		}
-		return new Key (generateKey (passphrase, salt, keyLength, iterations));
+		
+		return generateKey (passphrase, salt, keyLength, iterations);
 		
 	}
 	
@@ -38,7 +39,7 @@ public final class PBKDF2KeyGen {
 			return skf.generateSecret (spec).getEncoded();
 		}
 		catch (Exception e) {
-			Logger.log("PBKDF2KeyGen.generateKey: " + e);
+			Logger.log ("PBKDF2KeyGen.generateKey: " + e);
 			return null;
 		}
 	}
@@ -50,7 +51,7 @@ public final class PBKDF2KeyGen {
 		
 		int iterations = (int) Math.pow (2,17);
 		
-		Key key = getPBKDF2Key(passphrase, salt, 256, iterations);
-		System.out.println(key.getKey().length);
+		byte[] key = getPBKDF2Key(passphrase, salt, 256, iterations);
+		System.out.println (key.length);
 	}
 }

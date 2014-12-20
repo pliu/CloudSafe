@@ -2,15 +2,15 @@ package com.cloudsafe.client;
 
 import java.security.SecureRandom;
 
-public class RandomKeyGen {
+public class RandomByteGen {
 	
-	public static final Key getRandomKey (int keyLength) {
-		return new Key (generateKey (keyLength));
+	protected static final byte[] getRandomKey (int keyLength) {
+		return generateKey (keyLength);
 	}
 	
 	private static final byte[] generateKey (int keyLength) {
 		SecureRandom rand = new SecureRandom();
-		byte[] randBytes = new byte [keyLength];
+		byte[] randBytes = new byte [keyLength/8];
 		rand.nextBytes (randBytes);
 		return randBytes;
 	}

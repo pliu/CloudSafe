@@ -12,17 +12,27 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public final class GCMCrypto extends SymmetricCrypto {
 	
-	protected final byte[] endecrypt (int mode, byte[] key, byte[] target, byte[] IV) {
+	private static final int BLOCK_LENGTH = 128; // in bits
+	
+	protected static final GCMCrypto getInstance (ImmutableBytes key) {
+		return new GCMCrypto (key);
+	}
+	
+	private GCMCrypto (ImmutableBytes key) {
+		super (key);
+	}
+	
+	protected final byte[] endecrypt (int mode, byte[] target, byte[] IV) {
 		Security.addProvider (new BouncyCastleProvider());
 		try {
-			SecretKey fileKey = new SecretKeySpec (key, "AES");
+			SecretKey fileKey = new SecretKeySpec (key.getBytes(), "AES");
 			Cipher cipher = Cipher.getInstance ("AES/GCM/NoPadding", "BC");
 			cipher.init(mode, fileKey, new IvParameterSpec (IV));
 			return cipher.doFinal (target);
 		}
 		catch (BadPaddingException e) {
 			Logger.log ("GCMCrypto.endecrypt: " + e);
-			return SymmetricCrypto.TAMPERED;
+			return TAMPERED;
 		}
 		catch (Exception e) {
 			Logger.log ("GCMCrypto.endecrypt: " + e);
@@ -34,14 +44,17 @@ public final class GCMCrypto extends SymmetricCrypto {
 		//Testing encryption and decryption in the presence and absence of tampering
 		String passphrase = "This is a test.";
 		byte[] salt = "1234567812345678".getBytes();
-		byte[] IV = new byte[16];
-		byte[] key = Key.getKey(Key.PBKDF2, passphrase, salt, 256, (int) Math.pow (2, 17)).getKey();
+		byte[] IV = "123".getBytes();
+		ImmutableBytes key = ByteGenerator.getInstance(ByteGenerator.PBKDF2, passphrase, salt, 256, (int) Math.pow (2, 17));
 		
-		SymmetricCrypto sc = new GCMCrypto();
-		byte[] ciphertext = sc.encrypt (key, passphrase.getBytes(), IV);
-		//ciphertext[1] = 12;
-		byte[] plaintext = sc.decrypt (key, ciphertext, IV);
+		SymmetricCrypto sc = getInstance (key);
+		byte[] ciphertext = sc.encrypt (passphrase.getBytes(), IV);
+		ciphertext[1] = 15;
+		byte[] plaintext = sc.decrypt (ciphertext, IV);
 		
+		System.out.println (new String(ciphertext, "UTF-8"));
 		System.out.println (new String(plaintext, "UTF-8"));
+		System.out.println (ciphertext.length);
+		System.out.println (plaintext.length);
 	}
 }
