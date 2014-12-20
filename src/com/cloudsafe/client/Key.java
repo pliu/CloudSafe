@@ -1,19 +1,35 @@
 package com.cloudsafe.client;
 
-public abstract class Key {
+
+public final class Key {
 	
-	public static final String PBKDF2 = "PBKDF2";
+	private static final int MIN_KEY_LENGTH = 128; // in bits
+	public static final int PBKDF2 = 0;
+	public static final int RANDOM = 1;
 	
-	private byte[] key;
+	private final byte[] key;
 	
-	public static final Key getKey (String alg, String passphrase, byte[] salt, int keyLength, int iterations) {
-		if (alg.equals(PBKDF2)) {
-			return PBKDF2Key.getPBKDF2Key(passphrase, salt, keyLength, iterations);
+	public static final Key getKey (int alg, String passphrase, byte[] salt, int keyLength, int iterations) {
+		if (keyLength < MIN_KEY_LENGTH) {
+			Logger.log ("Key.getKey: Key length was " + keyLength + " (salt length must be greater" +
+					" than or equal to " + MIN_KEY_LENGTH + ").");
+			return null;
 		}
-		else {
+		
+		switch (alg) {
+		case PBKDF2:
+			return PBKDF2KeyGen.getPBKDF2Key (passphrase, salt, keyLength, iterations);
+		case RANDOM:
+			return RandomKeyGen.getRandomKey (keyLength);
+		default:
 			Logger.log ("Key.getKey: " + alg + " is not a valid key derivation algorithm.");
 			return null;
 		}
+	}
+	
+	public Key (byte[] tKey) {
+		key = new byte [tKey.length];
+		System.arraycopy(key, 0, tKey, 0, tKey.length);
 	}
 	
 	public final byte[] getKey () {
@@ -21,11 +37,4 @@ public abstract class Key {
 		System.arraycopy(key, 0, tKey, 0, key.length);
 		return tKey;
 	}
-	
-	protected final void setKey (byte[] tKey) {
-		key = new byte [tKey.length];
-		System.arraycopy(key, 0, tKey, 0, tKey.length);
-	}
-	
-	protected abstract byte[] generateKey (String passphrase, byte[] salt, int keyLength);
 }

@@ -15,7 +15,7 @@ public final class Logger {
 	
 	private Logger () {}
 	
-	public static final Logger getLogger () {
+	public static final Logger getInstance () {
 		if (logger == null) {
 			logger = new Logger();
 			return logger;
