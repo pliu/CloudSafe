@@ -10,20 +10,38 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-public final class GCMCrypto extends SymmetricCrypto {
+public final class GCM256Crypto extends SymmetricCrypto {
 	
+	private static final int KEY_LENGTH = 256; // in bits
 	private static final int BLOCK_LENGTH = 128; // in bits
 	
-	protected static final GCMCrypto getInstance (ImmutableBytes key) {
-		return new GCMCrypto (key);
+	public static final GCM256Crypto getInstance (ImmutableBytes key) {
+		if (key == null) {
+			Logger.log ("Key was null.");
+			return null;
+		}
+		if (key.getBytes().length != KEY_LENGTH/8) {
+			Logger.log ("Key length was " + key.getBytes().length*8 + "bits (key length must be "
+					+ KEY_LENGTH + ").");
+			return null;
+		}
+		
+		return new GCM256Crypto (key);
 	}
 	
-	private GCMCrypto (ImmutableBytes key) {
+	private GCM256Crypto (ImmutableBytes key) {
 		super (key);
 	}
 	
-	protected final byte[] endecrypt (int mode, byte[] target, byte[] IV) {
+	protected final byte[] endecrypt (int mode, ImmutableBytes key, byte[] target, byte[] IV) {
+		if (IV.length != BLOCK_LENGTH/8) {
+			Logger.log ("IV length was " + IV.length*8 + " bits (IV length must be " + BLOCK_LENGTH
+					+ ").");
+			return null;
+		}
+		
 		Security.addProvider (new BouncyCastleProvider());
+		
 		try {
 			SecretKey fileKey = new SecretKeySpec (key.getBytes(), "AES");
 			Cipher cipher = Cipher.getInstance ("AES/GCM/NoPadding", "BC");
@@ -31,11 +49,11 @@ public final class GCMCrypto extends SymmetricCrypto {
 			return cipher.doFinal (target);
 		}
 		catch (BadPaddingException e) {
-			Logger.log ("GCMCrypto.endecrypt: " + e);
+			Logger.log (e.toString());
 			return TAMPERED;
 		}
 		catch (Exception e) {
-			Logger.log ("GCMCrypto.endecrypt: " + e);
+			Logger.log (e.toString());
 			return null;
 		}
 	}
@@ -44,12 +62,12 @@ public final class GCMCrypto extends SymmetricCrypto {
 		//Testing encryption and decryption in the presence and absence of tampering
 		String passphrase = "This is a test.";
 		byte[] salt = "1234567812345678".getBytes();
-		byte[] IV = "123".getBytes();
-		ImmutableBytes key = ByteGenerator.getInstance(ByteGenerator.PBKDF2, passphrase, salt, 256, (int) Math.pow (2, 17));
+		byte[] IV = "1234567812345678".getBytes();
+		ImmutableBytes key = ByteGenerator.getInstance(ByteGenerator.PBKDF2, passphrase, salt, 255, (int) Math.pow (2, 17));
 		
 		SymmetricCrypto sc = getInstance (key);
 		byte[] ciphertext = sc.encrypt (passphrase.getBytes(), IV);
-		ciphertext[1] = 15;
+		//ciphertext[1] = 12;
 		byte[] plaintext = sc.decrypt (ciphertext, IV);
 		
 		System.out.println (new String(ciphertext, "UTF-8"));

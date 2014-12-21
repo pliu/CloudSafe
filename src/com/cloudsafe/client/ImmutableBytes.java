@@ -6,7 +6,7 @@ public final class ImmutableBytes {
 	
 	public static final ImmutableBytes getInstance (byte[] bytes) {
 		if (bytes == null) {
-			Logger.log ("ImmutableBytes.getInstance : Bytes were null.");
+			Logger.log ("Bytes were null.");
 			return null;
 		}
 		return new ImmutableBytes (bytes);

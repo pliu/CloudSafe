@@ -4,23 +4,19 @@ import com.dropbox.core.*;
 import java.io.*;
 import java.util.Locale;
 
-public class DropboxAuthenticator {
+public final class DropboxAuthenticator {
 	
 	private static final String APP_KEY = "qvkej7tre69bpda";
 	private static final String APP_SECRET = "e0ziz5ditzxq084";
 	private static String ACCESS_TOKEN = null;
 	
-	public final String getToken () {
+	public final String getToken () throws Exception {
 		DbxAppInfo appInfo = new DbxAppInfo (APP_KEY, APP_SECRET);
 
         DbxRequestConfig config = new DbxRequestConfig ("CloudSafe/0.01", Locale.getDefault().toString());
         DbxWebAuthNoRedirect webAuth = new DbxWebAuthNoRedirect (config, appInfo);
         
         String authorizeUrl = webAuth.start();
-		
-	}
-	
-	public static void main (String[] args) throws Exception {
         
         System.out.println("1. Go to: " + authorizeUrl);
         System.out.println("2. Click \"Allow\" (you might have to log in first)");
@@ -32,6 +28,12 @@ public class DropboxAuthenticator {
         
         DbxClient client = new DbxClient(config, accessToken);
         System.out.println("Linked account: " + client.getAccountInfo().displayName);
+		
+        return null;
+	}
+	
+	public static void main (String[] args) throws Exception {
+        new DropboxAuthenticator().getToken();
 	}
 
 }

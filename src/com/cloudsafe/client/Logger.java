@@ -24,12 +24,19 @@ public final class Logger {
 	}
 	
 	public static final void log (String errorMsg) {
+		StackTraceElement stacktrace = Thread.currentThread().getStackTrace()[2]; // The function that
+																				  // called log
+		if (errorMsg == null) {
+			errorMsg = "Error message was null.";
+		}
+		
 		File logFile = new File (LOG_PATH);
 		logFile.getParentFile().mkdirs();
 		try {
 			logFile.createNewFile(); // Already checks if file exists
 			PrintWriter out = new PrintWriter (new BufferedWriter (new FileWriter (logFile, true)));
-		    out.println("(" + new Timestamp (new Date().getTime()).toString() + ") " + errorMsg);
+		    out.println("(" + new Timestamp (new Date().getTime()).toString() + ") " + 
+		    		stacktrace.getClassName() + "." + stacktrace.getMethodName() + ": " + errorMsg);
 		    out.close();
 		}
 		catch (IOException e) {
@@ -48,6 +55,11 @@ public final class Logger {
 	}
 	
 	private final boolean isValidPath (String path) {
+		if (path == null) {
+			log ("Path was null.");
+			return false;
+		}
+		
 		return true;
 	}
 	

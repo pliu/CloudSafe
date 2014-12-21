@@ -2,9 +2,18 @@ package com.cloudsafe.client;
 
 import java.security.SecureRandom;
 
-public class RandomByteGen {
+public final class RandomByteGen {
 	
-	protected static final byte[] getRandomKey (int keyLength) {
+	public static final byte[] getRandomKey (int keyLength) {
+		if (keyLength < 1) {
+			Logger.log ("Key length was " + keyLength + " bits (key length must be at least 1).");
+			return null;
+		}
+		if (keyLength % 8 != 0) {
+			Logger.log ("Key length was " + keyLength + " bits (key length must be a multiple of 8).");
+			return null;
+		}
+		
 		return generateKey (keyLength);
 	}
 	

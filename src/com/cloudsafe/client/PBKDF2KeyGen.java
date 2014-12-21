@@ -8,23 +8,31 @@ public final class PBKDF2KeyGen {
 	private static final int MIN_SALT_LENGTH = 128; // in bits
 	private static final int MIN_ITERATIONS = (int) Math.pow (2,17);
 	
-	protected static final byte[] getPBKDF2Key (String passphrase, byte[] salt, int keyLength, int iterations) {
+	public static final byte[] getPBKDF2Key (String passphrase, byte[] salt, int keyLength, int iterations) {
 		if (passphrase == null || passphrase.length() < 1) {
-			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Passphrase was either null or empty.");
+			Logger.log ("Passphrase was either null or empty.");
 			return null;
 		}
 		if (salt == null) {
-			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Salt was null.");
+			Logger.log ("Salt was null.");
 			return null;
 		}
 		if (salt.length < MIN_SALT_LENGTH/8)  {
-			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Salt length was " + salt.length*8 + " bits (salt"
-					+ " length must be greater than or equal to " + MIN_SALT_LENGTH + ").");
+			Logger.log ("Salt length was " + salt.length*8 + " bits (salt length must be greater than or"
+					+ " equal to " + MIN_SALT_LENGTH + ").");
+			return null;
+		}
+		if (keyLength < 1) {
+			Logger.log ("Key length was " + keyLength + " bits (key length must be at least 1).");
+			return null;
+		}
+		if (keyLength % 8 != 0) {
+			Logger.log ("Key length was " + keyLength + " bits (key length must be a multiple of 8).");
 			return null;
 		}
 		if (iterations < MIN_ITERATIONS) {
-			Logger.log ("PBKDF2KeyGen.getPBKDF2Key: Iterations input was " + iterations + " (iterations"
-					+ " must be greater than or equal to " + MIN_ITERATIONS + ").");
+			Logger.log ("Iterations input was " + iterations + " (iterations must be greater than or"
+					+ " equal to " + MIN_ITERATIONS + ").");
 			return null;
 		}
 		
@@ -39,7 +47,7 @@ public final class PBKDF2KeyGen {
 			return skf.generateSecret (spec).getEncoded();
 		}
 		catch (Exception e) {
-			Logger.log ("PBKDF2KeyGen.generateKey: " + e);
+			Logger.log (e.toString());
 			return null;
 		}
 	}
