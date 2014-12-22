@@ -42,8 +42,8 @@ public final class GCM256Crypto extends SymmetricCrypto {
 		
 		Security.addProvider (new BouncyCastleProvider());
 		
+		SecretKey fileKey = new SecretKeySpec (key.getBytes(), "AES");
 		try {
-			SecretKey fileKey = new SecretKeySpec (key.getBytes(), "AES");
 			Cipher cipher = Cipher.getInstance ("AES/GCM/NoPadding", "BC");
 			cipher.init(mode, fileKey, new IvParameterSpec (IV));
 			return cipher.doFinal (target);
@@ -63,7 +63,7 @@ public final class GCM256Crypto extends SymmetricCrypto {
 		String passphrase = "This is a test.";
 		byte[] salt = "1234567812345678".getBytes();
 		byte[] IV = "1234567812345678".getBytes();
-		ImmutableBytes key = ByteGenerator.getInstance(ByteGenerator.PBKDF2, passphrase, salt, 255, (int) Math.pow (2, 17));
+		ImmutableBytes key = ByteGenerator.getInstance(ByteGenerator.PBKDF2, passphrase, salt, 256, (int) Math.pow (2, 17));
 		
 		SymmetricCrypto sc = getInstance (key);
 		byte[] ciphertext = sc.encrypt (passphrase.getBytes(), IV);

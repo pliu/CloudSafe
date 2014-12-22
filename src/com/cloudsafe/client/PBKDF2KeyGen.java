@@ -41,8 +41,8 @@ public final class PBKDF2KeyGen {
 	}
 	
 	private static final byte[] generateKey (String passphrase, byte[] salt, int keyLength, int iterations) {
+		PBEKeySpec spec = new PBEKeySpec (passphrase.toCharArray(), salt, iterations, keyLength);
 		try {
-			PBEKeySpec spec = new PBEKeySpec (passphrase.toCharArray(), salt, iterations, keyLength);
 			SecretKeyFactory skf = SecretKeyFactory.getInstance ("PBKDF2WithHmacSHA1");
 			return skf.generateSecret (spec).getEncoded();
 		}
