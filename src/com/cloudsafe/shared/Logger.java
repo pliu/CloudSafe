@@ -1,4 +1,4 @@
-package com.cloudsafe.client;
+package com.cloudsafe.shared;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,8 +13,6 @@ public final class Logger {
 	private static String LOG_PATH = System.getProperty ("user.home") + "\\Desktop\\CloudSafe\\cs.log";
 	private static Logger logger = null;
 	
-	private Logger () {}
-	
 	public static final Logger getInstance () {
 		if (logger == null) {
 			logger = new Logger();
@@ -22,6 +20,8 @@ public final class Logger {
 		}
 		return null;
 	}
+	
+	private Logger () {}
 	
 	public static final void log (String errorMsg) {
 		StackTraceElement stacktrace = Thread.currentThread().getStackTrace()[2]; // The function that

@@ -3,14 +3,17 @@ package com.cloudsafe.client;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import com.cloudsafe.shared.Logger;
+
 public final class PBKDF2KeyGen {
 	
 	private static final int MIN_SALT_LENGTH = 128; // in bits
 	private static final int MIN_ITERATIONS = (int) Math.pow (2,17);
 	
-	public static final byte[] getPBKDF2Key (String passphrase, byte[] salt, int keyLength, int iterations) {
-		if (passphrase == null || passphrase.length() < 1) {
-			Logger.log ("Passphrase was either null or empty.");
+	public static final byte[] getPBKDF2Key (String passphrase, byte[] salt, int keyLength,
+			int iterations) {
+		if (passphrase == null) {
+			Logger.log ("Passphrase was null.");
 			return null;
 		}
 		if (salt == null) {
@@ -40,7 +43,8 @@ public final class PBKDF2KeyGen {
 		
 	}
 	
-	private static final byte[] generateKey (String passphrase, byte[] salt, int keyLength, int iterations) {
+	private static final byte[] generateKey (String passphrase, byte[] salt, int keyLength,
+			int iterations) {
 		PBEKeySpec spec = new PBEKeySpec (passphrase.toCharArray(), salt, iterations, keyLength);
 		try {
 			SecretKeyFactory skf = SecretKeyFactory.getInstance ("PBKDF2WithHmacSHA1");
@@ -54,7 +58,7 @@ public final class PBKDF2KeyGen {
 	
 	public static void main (String[] args) {
 		//Testing the time required to derive a key given some # of iterations
-		String passphrase = "This is a test.";
+		String passphrase = "";
 		byte[] salt = "1234567812345678".getBytes();
 		
 		int iterations = (int) Math.pow (2,17);

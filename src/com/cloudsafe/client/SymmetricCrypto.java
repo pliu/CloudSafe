@@ -8,6 +8,9 @@ import java.io.ObjectOutputStream;
 
 import javax.crypto.Cipher;
 
+import com.cloudsafe.shared.ImmutableBytes;
+import com.cloudsafe.shared.Logger;
+
 public abstract class SymmetricCrypto {
 	
 	public static final byte[] TAMPERED = new byte [0];
@@ -15,9 +18,13 @@ public abstract class SymmetricCrypto {
 	
 	private final ImmutableBytes key;
 	
-	public static final SymmetricCrypto getInstance (String alg, ImmutableBytes key) {
+	public static final SymmetricCrypto getInstance (String alg, byte[] key) {
 		if (alg == null) {
 			Logger.log ("Algorithm was null.");
+			return null;
+		}
+		if (key == null) {
+			Logger.log ("Key was null.");
 			return null;
 		}
 		
@@ -30,8 +37,8 @@ public abstract class SymmetricCrypto {
 		}
 	}
 	
-	protected SymmetricCrypto (ImmutableBytes key) {
-		this.key = key;
+	protected SymmetricCrypto (byte[] key) {
+		this.key = ImmutableBytes.getInstance (key);
 	}
 
 	public final byte[] encrypt (byte[] plaintext, byte[] IV) {
@@ -44,7 +51,7 @@ public abstract class SymmetricCrypto {
 			return null;
 		}
 		
-		return endecrypt (Cipher.ENCRYPT_MODE, key, plaintext, IV);
+		return endecrypt (Cipher.ENCRYPT_MODE, key.getBytes(), plaintext, IV);
 	}
 	
 	public final byte[] encrypt (Object obj, byte[] IV) {
@@ -66,10 +73,8 @@ public abstract class SymmetricCrypto {
 			return null;
 		}
 		
-		return endecrypt (Cipher.DECRYPT_MODE, key, ciphertext, IV);
+		return endecrypt (Cipher.DECRYPT_MODE, key.getBytes(), ciphertext, IV);
 	}
-	
-	protected abstract byte[] endecrypt (int mode, ImmutableBytes key, byte[] target, byte[] IV);
 	
 	private final byte[] serialize (Object obj) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -85,6 +90,11 @@ public abstract class SymmetricCrypto {
 	}
 	
 	public static final Object deserialize (byte[] data) {
+		if (data == null) {
+			Logger.log ("Data was null.");
+			return null;
+		}
+		
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
 		try {
 			ObjectInputStream is = new ObjectInputStream(in);
@@ -96,13 +106,27 @@ public abstract class SymmetricCrypto {
 		}
 	}
 	
+	protected abstract byte[] endecrypt (int mode, byte[] key, byte[] target, byte[] IV);
+	
 	public static void main (String[] args) throws Exception {
-		//Testing whether == for byte[] tests addresses or values
-		byte[] a = new byte[1];
-		byte[] b = new byte[1];
-		byte[] c = a;
-		System.arraycopy(a, 0, b, 0, 1);
-		System.out.println (a == b);
-		System.out.println (a == c);
+		//Testing encryption and decryption in the presence and absence of tampering
+		String passphrase = "This is a test.";
+		byte[] salt = "1234567812345678".getBytes();
+		byte[] IV = "1234567812345678".getBytes();
+		byte[] key = ByteGenerator.getBytes (ByteGenerator.PBKDF2, 256, passphrase, salt,
+				(int) Math.pow (2, 17));
+				
+		SymmetricCrypto sc = getInstance ("GCM256", key);
+		
+		byte[] ciphertext = sc.encrypt (passphrase.getBytes(), IV);
+		
+		//ciphertext[1] = 12;
+		
+		byte[] plaintext = sc.decrypt (ciphertext, IV);
+				
+		System.out.println (new String(ciphertext, "UTF-8"));
+		System.out.println (new String(plaintext, "UTF-8"));
+		System.out.println (ciphertext.length);
+		System.out.println (plaintext.length);
 	}
 }
