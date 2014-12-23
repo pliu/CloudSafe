@@ -28,10 +28,15 @@ public final class ImmutableBytes implements Serializable {
 	}
 	
 	public static void main (String[] args) throws Exception {
-		//Testing byte[] immutability
+		//Testing byte[] and String immutability
 		byte[] a = "123".getBytes();
 		byte[] b = a;
 		b[1] = 12;
 		System.out.println(new String (a, "UTF-8"));
+		
+		String c = "abc";
+		String d = c;
+		d = d + "!";
+		System.out.println(c+ d);
 	}
 }

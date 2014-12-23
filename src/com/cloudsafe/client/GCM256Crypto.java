@@ -14,8 +14,8 @@ import com.cloudsafe.shared.Logger;
 
 public final class GCM256Crypto extends SymmetricCrypto {
 	
-	private static final int KEY_LENGTH = 256; // in bits
-	private static final int BLOCK_LENGTH = 128; // in bits
+	protected static final int KEY_LENGTH = 256; // in bits
+	protected static final int BLOCK_LENGTH = 128; // in bits
 	
 	public static final GCM256Crypto getInstance (byte[] key) {
 		if (key.length != KEY_LENGTH/8) {

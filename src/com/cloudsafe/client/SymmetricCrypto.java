@@ -40,6 +40,36 @@ public abstract class SymmetricCrypto {
 	protected SymmetricCrypto (byte[] key) {
 		this.key = ImmutableBytes.getInstance (key);
 	}
+	
+	public static final int getKeyLength (String alg) {
+		if (alg == null) {
+			Logger.log ("Algorithm was null.");
+			return 0;
+		}
+		
+		switch (alg) {
+		case GCM256:
+			return GCM256Crypto.KEY_LENGTH;
+		default:
+			Logger.log (alg + " is not a valid symmetric encryption algorithm.");
+			return 0;
+		}
+	}
+	
+	public static final int getBlockLength (String alg) {
+		if (alg == null) {
+			Logger.log ("Algorithm was null.");
+			return 0;
+		}
+		
+		switch (alg) {
+		case GCM256:
+			return GCM256Crypto.BLOCK_LENGTH;
+		default:
+			Logger.log (alg + " is not a valid symmetric encryption algorithm.");
+			return 0;
+		}
+	}
 
 	public final byte[] encrypt (byte[] plaintext, byte[] IV) {
 		if (plaintext == null) {

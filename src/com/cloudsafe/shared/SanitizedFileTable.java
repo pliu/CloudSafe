@@ -4,19 +4,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public final class SanitizedProfile implements Serializable {
+public final class SanitizedFileTable implements Serializable {
 
 	private static final long serialVersionUID = 0L;
 	
-	private final String alg;
+	private final String keyGenAlg;
 	private final ImmutableBytes salt;
 	private final int iterations;
+	private final String encAlg;
 	private final ImmutableBytes IV;
 	private final Hashtable<Integer, ImmutableBytes> encFileTable = new Hashtable<>();
 	
-	public static final SanitizedProfile getInstance (String alg, byte[] salt, int iterations, byte[] IV) {
-		if (alg == null) {
-			Logger.log ("Algorithm was null.");
+	public static final SanitizedFileTable getInstance (String keyGenAlg, byte[] salt, int iterations,
+			String encAlg, byte[] IV) {
+		if (keyGenAlg == null) {
+			Logger.log ("Key generation algorithm was null.");
 			return null;
 		}
 		if (salt == null) {
@@ -27,29 +29,38 @@ public final class SanitizedProfile implements Serializable {
 			Logger.log ("Iterations input was " + iterations + " (iterations must be greater than 1");
 			return null;
 		}
+		if (encAlg == null) {
+			Logger.log ("Encryption algorithm was null.");
+			return null;
+		}
 		if (IV == null) {
 			Logger.log ("IV was null.");
 			return null;
 		}
 		
-		return new SanitizedProfile (alg, salt, iterations, IV);
+		return new SanitizedFileTable (keyGenAlg, salt, iterations, encAlg, IV);
 	}
 	
-	private SanitizedProfile (String alg, byte[] salt, int iterations, byte[] IV) {
-		this.alg = alg;
+	private SanitizedFileTable (String keyGenAlg, byte[] salt, int iterations, String encAlg, byte[] IV) {
+		this.keyGenAlg = keyGenAlg;
 		this.salt = ImmutableBytes.getInstance (salt);
 		this.iterations = iterations;
+		this.encAlg = encAlg;
 		this.IV = ImmutableBytes.getInstance (IV);
 	}
 	
-	public final boolean addFileMeta (int index, ImmutableBytes encFileMeta) {
+	public final boolean addFileMeta (int index, byte[] encFileMeta) {
 		if (encFileMeta == null) {
 			Logger.log ("Encrypted file metadata was null.");
 			return false;
 		}
 		
-		encFileTable.put(index, encFileMeta);
+		encFileTable.put(index, ImmutableBytes.getInstance (encFileMeta));
 		return true;
+	}
+	
+	public final byte[] getEncFileMeta (int index) {
+		return encFileTable.get (index).getBytes();
 	}
 	
 	public final void removeFileMeta (int index) {
@@ -60,8 +71,8 @@ public final class SanitizedProfile implements Serializable {
 		return encFileTable.containsKey(index);
 	}
 	
-	public final String getAlgorithm () {
-		return alg;
+	public final String getKeyGenAlg () {
+		return keyGenAlg;
 	}
 	
 	public final byte[] getSalt () {
@@ -72,11 +83,15 @@ public final class SanitizedProfile implements Serializable {
 		return iterations;
 	}
 	
+	public final String getEncAlg () {
+		return encAlg;
+	}
+	
 	public final byte[] getIV () {
 		return IV.getBytes();
 	}
 	
-	public final ArrayList<ImmutableBytes> getEncFileList () {
-		return new ArrayList<> (encFileTable.values());
+	public final ArrayList<Integer> getIndices () {
+		return new ArrayList<> (encFileTable.keySet());
 	}
 }

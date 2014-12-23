@@ -7,22 +7,17 @@ public final class FileMetadata {
 	
 	private final String localFilename;
 	private final String remoteFilename;
-	private final String alg;
 	private final ImmutableBytes key;
 	private final ImmutableBytes IV;
 	
-	public static final FileMetadata getInstance (String localFilename, String remoteFilename, String alg,
-			byte[] key, byte[] IV) {
+	public static final FileMetadata getInstance (String localFilename, String remoteFilename, byte[] key,
+			byte[] IV) {
 		if (localFilename == null) {
 			Logger.log ("Local filename was null.");
 			return null;
 		}
 		if (remoteFilename == null) {
 			Logger.log ("Remote filename was null.");
-			return null;
-		}
-		if (alg == null) {
-			Logger.log ("Algorithm was null.");
 			return null;
 		}
 		if (key == null) {
@@ -34,13 +29,12 @@ public final class FileMetadata {
 			return null;
 		}
 		
-		return new FileMetadata (localFilename, remoteFilename, alg, key, IV);
+		return new FileMetadata (localFilename, remoteFilename, key, IV);
 	}
 	
-	private FileMetadata (String localFilename, String remoteFilename, String alg, byte[] key, byte[] IV) {
+	private FileMetadata (String localFilename, String remoteFilename, byte[] key, byte[] IV) {
 		this.localFilename = localFilename;
 		this.remoteFilename = remoteFilename;
-		this.alg = alg;
 		this.key = ImmutableBytes.getInstance (key);
 		this.IV = ImmutableBytes.getInstance (IV);
 	}
@@ -51,10 +45,6 @@ public final class FileMetadata {
 	
 	public final String getRemoteName () {
 		return remoteFilename;
-	}
-	
-	public final String getAlgorithm () {
-		return alg;
 	}
 	
 	public final byte[] getKey () {
