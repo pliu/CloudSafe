@@ -1,9 +1,13 @@
 package com.cloudsafe.client;
 
+import java.io.Serializable;
+
 import com.cloudsafe.shared.ImmutableBytes;
 import com.cloudsafe.shared.Logger;
 
-public final class FileMetadata {
+public final class FileMetadata implements Serializable {
+	
+	private static final long serialVersionUID = 0L;
 	
 	private final String localFilename;
 	private final String remoteFilename;

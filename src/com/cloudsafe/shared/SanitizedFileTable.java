@@ -13,7 +13,7 @@ public final class SanitizedFileTable implements Serializable {
 	private final int iterations;
 	private final String encAlg;
 	private final ImmutableBytes IV;
-	private final Hashtable<Integer, ImmutableBytes> encFileTable = new Hashtable<>();
+	private final Hashtable<Long, ImmutableBytes> encFileTable = new Hashtable<>();
 	
 	public static final SanitizedFileTable getInstance (String keyGenAlg, byte[] salt, int iterations,
 			String encAlg, byte[] IV) {
@@ -26,7 +26,7 @@ public final class SanitizedFileTable implements Serializable {
 			return null;
 		}
 		if (iterations < 1) {
-			Logger.log ("Iterations input was " + iterations + " (iterations must be greater than 1");
+			Logger.log ("Iterations input was " + iterations + " (iterations must be greater than 1).");
 			return null;
 		}
 		if (encAlg == null) {
@@ -49,7 +49,7 @@ public final class SanitizedFileTable implements Serializable {
 		this.IV = ImmutableBytes.getInstance (IV);
 	}
 	
-	public final boolean addFileMeta (int index, byte[] encFileMeta) {
+	public final boolean addFileMeta (long index, byte[] encFileMeta) {
 		if (encFileMeta == null) {
 			Logger.log ("Encrypted file metadata was null.");
 			return false;
@@ -59,15 +59,15 @@ public final class SanitizedFileTable implements Serializable {
 		return true;
 	}
 	
-	public final byte[] getEncFileMeta (int index) {
+	public final byte[] getEncFileMeta (long index) {
 		return encFileTable.get (index).getBytes();
 	}
 	
-	public final void removeFileMeta (int index) {
+	public final void removeFileMeta (long index) {
 		encFileTable.remove (index);
 	}
 	
-	public final boolean indexExists (int index) {
+	public final boolean indexExists (long index) {
 		return encFileTable.containsKey(index);
 	}
 	
@@ -91,7 +91,7 @@ public final class SanitizedFileTable implements Serializable {
 		return IV.getBytes();
 	}
 	
-	public final ArrayList<Integer> getIndices () {
+	public final ArrayList<Long> getIndices () {
 		return new ArrayList<> (encFileTable.keySet());
 	}
 }

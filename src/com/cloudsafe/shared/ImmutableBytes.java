@@ -37,6 +37,6 @@ public final class ImmutableBytes implements Serializable {
 		String c = "abc";
 		String d = c;
 		d = d + "!";
-		System.out.println(c+ d);
+		System.out.println(c + d);
 	}
 }
