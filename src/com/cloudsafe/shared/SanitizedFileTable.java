@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public final class SanitizedFileTable implements Serializable {
+public class SanitizedFileTable implements Serializable {
 
 	private static final long serialVersionUID = 0L;
 	
@@ -15,7 +15,7 @@ public final class SanitizedFileTable implements Serializable {
 	private final ImmutableBytes IV;
 	private final Hashtable<Long, ImmutableBytes> encFileTable = new Hashtable<>();
 	
-	public static final SanitizedFileTable getInstance (String keyGenAlg, byte[] salt, int iterations,
+	public static SanitizedFileTable getInstance (String keyGenAlg, byte[] salt, int iterations,
 			String encAlg, byte[] IV) {
 		if (keyGenAlg == null) {
 			Logger.log ("Key generation algorithm was null.");
@@ -41,7 +41,7 @@ public final class SanitizedFileTable implements Serializable {
 		return new SanitizedFileTable (keyGenAlg, salt, iterations, encAlg, IV);
 	}
 	
-	private SanitizedFileTable (String keyGenAlg, byte[] salt, int iterations, String encAlg, byte[] IV) {
+	protected SanitizedFileTable (String keyGenAlg, byte[] salt, int iterations, String encAlg, byte[] IV) {
 		this.keyGenAlg = keyGenAlg;
 		this.salt = ImmutableBytes.getInstance (salt);
 		this.iterations = iterations;

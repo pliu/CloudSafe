@@ -11,7 +11,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 
 import com.cloudsafe.shared.Logger;
-import com.cloudsafe.shared.SanitizedFileTable;
 
 public final class Session {
 	
@@ -26,12 +25,12 @@ public final class Session {
 	//For testing purposes
 	private static final String OUTPUT = System.getProperty ("user.home") + "\\Desktop\\CloudSafe\\";
 	
-	private final SanitizedFileTable sanitizedTable;
+	private final LocalSanitizedFileTable sanitizedTable;
 	private final SymmetricCrypto metaEncryptor;
 	private final Hashtable <String, Long> fileTable = new Hashtable<>();
 	private final Hashtable <String, String> remoteUsedNames = new Hashtable<>();
 	
-	public static final Session getInstance (SanitizedFileTable sanitizedTable, String passphrase) {
+	public static final Session getInstance (LocalSanitizedFileTable sanitizedTable, String passphrase) {
 		if (sanitizedTable == null) {
 			Logger.log ("Sanitized profile was null.");
 			return null;
@@ -74,11 +73,11 @@ public final class Session {
 		byte[] salt = ByteGenerator.getBytes (ByteGenerator.RANDOM, SALT_LENGTH, null, null, 0);
 		byte[] IV = ByteGenerator.getBytes (ByteGenerator.RANDOM, SymmetricCrypto.getBlockLength(encAlg),
 				null, null, 0);
-		return new Session (SanitizedFileTable.getInstance (keyGenAlg, salt, ITERATIONS, encAlg, IV),
+		return new Session (LocalSanitizedFileTable.getInstance (keyGenAlg, salt, ITERATIONS, encAlg, IV),
 				passphrase);
 	}
 	
-	private Session (SanitizedFileTable sanitizedTable, String passphrase) {
+	private Session (LocalSanitizedFileTable sanitizedTable, String passphrase) {
 		this.sanitizedTable = sanitizedTable;
 		String keyGenAlg = sanitizedTable.getKeyGenAlg();
 		byte[] salt = sanitizedTable.getSalt();
@@ -172,7 +171,7 @@ public final class Session {
 				fileMeta.getKey());
 		fileBytes = fileEncryptor.decrypt (fileBytes, fileMeta.getIV());
 		
-		if (!saveFile (OUTPUT + "test.png", fileBytes)) {
+		if (!saveFile (OUTPUT + "test.mp3", fileBytes)) {
 			return false;
 		}
 		
@@ -206,7 +205,7 @@ public final class Session {
 	
 	public static void main (String[] args) {
 		Session s = Session.getInstance ("PBKDF2", 128, "GCM256", (int) Math.pow (2, 17), "testing");
-		s.saveFile ("D:\\Downloads\\qrcode.png");
-		s.loadFile ("D:\\Downloads\\qrcode.png");
+		s.saveFile ("D:\\Downloads\\mt9ztzH6LmFX.128.mp3");
+		s.loadFile ("D:\\Downloads\\mt9ztzH6LmFX.128.mp3");
 	}
 }
