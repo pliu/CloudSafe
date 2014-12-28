@@ -30,6 +30,8 @@ public final class Session {
 	private final Hashtable <String, Long> fileTable = new Hashtable<>();
 	private final Hashtable <String, String> remoteUsedNames = new Hashtable<>();
 	
+	private CloudConnection cloudConnection;
+	
 	public static final Session getInstance (LocalSanitizedFileTable sanitizedTable, String passphrase) {
 		if (sanitizedTable == null) {
 			Logger.log ("Sanitized profile was null.");
@@ -189,6 +191,10 @@ public final class Session {
 			Logger.log (e.toString());
 			return false;
 		}
+		return true;
+	}
+	
+	private final boolean saveSanitizedFileTable () {
 		return true;
 	}
 	
