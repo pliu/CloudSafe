@@ -4,8 +4,8 @@ import com.cloudsafe.shared.Logger;
 
 public abstract class CloudConnection {
 	
-	private static final String DROPBOX = "Dropbox";
-	private static final String GDRIVE = "GDrive";
+	public static final String DROPBOX = "Dropbox";
+	public static final String GDRIVE = "GDrive";
 	
 	public static final CloudConnection getInstance (String cloudProvider, String authToken) {
 		if (cloudProvider == null) {
@@ -32,8 +32,8 @@ public abstract class CloudConnection {
 	
 	public abstract boolean downloadFile ();
 	
-	public abstract String openConnection ();
-	
 	public abstract boolean closeConnection ();
+	
+	protected abstract String openConnection ();
 
 }

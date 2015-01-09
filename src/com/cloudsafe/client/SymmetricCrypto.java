@@ -137,26 +137,4 @@ public abstract class SymmetricCrypto {
 	}
 	
 	protected abstract byte[] endecrypt (int mode, byte[] key, byte[] target, byte[] IV);
-	
-	public static void main (String[] args) throws Exception {
-		//Testing encryption and decryption in the presence and absence of tampering
-		String passphrase = "This is a test.";
-		byte[] salt = "1234567812345678".getBytes();
-		byte[] IV = "1234567812345678".getBytes();
-		byte[] key = ByteGenerator.getBytes (ByteGenerator.PBKDF2, 256, passphrase, salt,
-				(int) Math.pow (2, 17));
-				
-		SymmetricCrypto sc = getInstance ("GCM256", key);
-		
-		byte[] ciphertext = sc.encrypt (passphrase.getBytes(), IV);
-		
-		//ciphertext[1] = 12;
-		
-		byte[] plaintext = sc.decrypt (ciphertext, IV);
-				
-		System.out.println (new String(ciphertext, "UTF-8"));
-		System.out.println (new String(plaintext, "UTF-8"));
-		System.out.println (ciphertext.length);
-		System.out.println (plaintext.length);
-	}
 }

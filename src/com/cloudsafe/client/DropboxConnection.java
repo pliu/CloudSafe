@@ -63,7 +63,7 @@ public final class DropboxConnection extends CloudConnection {
 		return true;
 	}
 	
-	public final String openConnection () {
+	protected final String openConnection () {
 		DbxAppInfo appInfo = new DbxAppInfo (APP_KEY, APP_SECRET);
 
         DbxRequestConfig config = new DbxRequestConfig ("CloudSafe/0.01", Locale.getDefault().toString());
