@@ -8,7 +8,7 @@ public final class CloudConnectionTest {
 	
 	private static final void dropboxTest () {
 		 cc = CloudConnection.getInstance(CloudConnection.DROPBOX, null);
-		 cc.downloadFile();
+		 cc.uploadFile("D:/Downloads/qrcode.png");
 	}
 	
 	public static void main (String[] args) {

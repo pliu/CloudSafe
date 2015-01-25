@@ -1,9 +1,5 @@
 #################
-## Eclipse
+## IntelliJ
 #################
 
-.project
-.metadata/
-bin/
-.classpath
-.settings/
+*.iml

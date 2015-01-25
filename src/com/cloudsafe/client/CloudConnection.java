@@ -28,12 +28,13 @@ public abstract class CloudConnection {
 	
 	public abstract boolean deleteFile (String path);
 	
-	public abstract boolean uploadFile ();
+	public abstract boolean uploadFile (String path);
 	
-	public abstract boolean downloadFile ();
+	public abstract boolean downloadFile (String path);
 	
 	public abstract boolean closeConnection ();
 	
-	protected abstract String openConnection ();
-
+	public abstract String getAuthToken ();
+	
+	protected abstract boolean openConnection ();
 }

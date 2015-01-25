@@ -1,6 +1,8 @@
 package com.cloudsafe.client;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
@@ -11,6 +13,7 @@ import com.dropbox.core.DbxClient;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.DbxWebAuthNoRedirect;
+import com.dropbox.core.DbxWriteMode;
 
 public final class DropboxConnection extends CloudConnection {
 	
@@ -34,11 +37,13 @@ public final class DropboxConnection extends CloudConnection {
 
 	public final boolean deleteFile (String path) {
 		if (dropboxClient == null) {
-			openConnection();
+			if (!openConnection()) {
+				return false;
+			}
 		}
 		
 		try {
-			dropboxClient.delete (path);
+			dropboxClient.delete ("/" + path);
 		}
 		catch (DbxException e) {
 			Logger.log (e.toString());
@@ -47,23 +52,44 @@ public final class DropboxConnection extends CloudConnection {
 		return true;
 	}
 	
-	public final boolean uploadFile () {
+	public final boolean uploadFile (String path) {
 		if (dropboxClient == null) {
-			openConnection();
+			if (!openConnection()) {
+				return false;
+			}
+		}
+		
+		try {
+			File f = new File (path);
+			dropboxClient.uploadFile("/" + "test", DbxWriteMode.add(), f.length(), new FileInputStream(path));
+		}
+		catch (Exception e) {
+			Logger.log (e.toString());
+			return false;
 		}
 		
 		return true;
 	}
 	
-	public final boolean downloadFile () {
+	public final boolean downloadFile (String path) {
 		if (dropboxClient == null) {
-			openConnection();
+			if (!openConnection()) {
+				return false;
+			}
 		}
 		
 		return true;
 	}
 	
-	protected final String openConnection () {
+	public final String getAuthToken () {
+		if (dropboxClient == null) {
+			return null;
+		}
+		
+		return dropboxClient.getAccessToken();
+	}
+	
+	protected final boolean openConnection () {
 		DbxAppInfo appInfo = new DbxAppInfo (APP_KEY, APP_SECRET);
 
         DbxRequestConfig config = new DbxRequestConfig ("CloudSafe/0.01", Locale.getDefault().toString());
@@ -83,13 +109,13 @@ public final class DropboxConnection extends CloudConnection {
         }
         catch (Exception e) {
         	Logger.log (e.toString());
-        	return null;
+        	return false;
         }
         String accessToken = authFinish.accessToken;
         
         dropboxClient = new DbxClient(config, accessToken);
         
-		return accessToken;
+        return true;
 	}
 	
 	public final boolean closeConnection () {

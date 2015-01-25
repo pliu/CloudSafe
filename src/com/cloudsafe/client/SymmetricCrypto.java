@@ -1,3 +1,8 @@
+/*
+ * Abstract class for performing symmetric cryptography.
+ * This subclasses implement the functions
+ */
+
 package com.cloudsafe.client;
 
 import java.io.ByteArrayInputStream;
