@@ -15,17 +15,36 @@ import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.DbxWebAuthNoRedirect;
 import com.dropbox.core.DbxWriteMode;
 
+/**
+ * This class uses the Dropbox SDK to manage a Dropbox connection. This class contains a getInstance
+ * static method that allows it to create instances of Dropbox connections.
+ */
 public final class DropboxConnection extends CloudConnection {
-	
+
+	/**
+	 * Some app- and Dropbox-specific constants to identify the app to Dropbox during connection.
+	 */
 	private static final String APP_KEY = "qvkej7tre69bpda";
 	private static final String APP_SECRET = "e0ziz5ditzxq084";
-	
+
+	/**
+	 *
+	 */
 	private DbxClient dropboxClient = null;
-	
+
+	/**
+	 *
+	 * @param authToken
+	 * @return
+	 */
 	public static final DropboxConnection getInstance (String authToken) {
 		return new DropboxConnection(authToken);
 	}
-	
+
+	/**
+	 *
+	 * @param authToken
+	 */
 	private DropboxConnection (String authToken) {
 		super();
 		if (authToken != null) {

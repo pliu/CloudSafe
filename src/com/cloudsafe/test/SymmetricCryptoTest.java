@@ -21,7 +21,7 @@ public final class SymmetricCryptoTest {
 		//ciphertext[1] = 12;
 		
 		byte[] plaintext = sc.decrypt (ciphertext, IV);
-				
+
 		System.out.println (new String(ciphertext, "UTF-8"));
 		System.out.println (new String(plaintext, "UTF-8"));
 		System.out.println (ciphertext.length);
