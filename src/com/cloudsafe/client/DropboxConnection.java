@@ -22,13 +22,14 @@ import com.dropbox.core.DbxWriteMode;
 public final class DropboxConnection extends CloudConnection {
 
 	/**
-	 * Some app- and Dropbox-specific constants to identify the app to Dropbox during connection.
+	 * Some app- and Dropbox-specific constants to identify the app to Dropbox.
 	 */
 	private static final String APP_KEY = "qvkej7tre69bpda";
 	private static final String APP_SECRET = "e0ziz5ditzxq084";
 
 	/**
-	 *
+	 * The Dropbox client. Is null if not authenticated. Once authenticated, by openConnection,
+     * remains open until closeConnection is called.
 	 */
 	private DbxClient dropboxClient = null;
 
