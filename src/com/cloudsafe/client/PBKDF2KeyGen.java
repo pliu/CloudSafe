@@ -3,7 +3,7 @@ package com.cloudsafe.client;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.utility.Logger;
 
 /**
  * This class uses Java SecretKeyFactory's PBKDF2WithHmacSHA1 specification to generate a password-

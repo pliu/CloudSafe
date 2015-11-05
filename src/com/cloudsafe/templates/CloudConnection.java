@@ -1,6 +1,7 @@
-package com.cloudsafe.client;
+package com.cloudsafe.templates;
 
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.client.DropboxConnection;
+import com.cloudsafe.utility.Logger;
 
 /**
  * This abstract class represents a connection to a generic cloud storage service. Subclasses

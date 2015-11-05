@@ -1,9 +1,8 @@
-package com.cloudsafe.client;
+package com.cloudsafe.data;
 
 import java.io.Serializable;
 
-import com.cloudsafe.shared.ImmutableBytes;
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.utility.Logger;
 
 public final class FileMetadata implements Serializable {
 	

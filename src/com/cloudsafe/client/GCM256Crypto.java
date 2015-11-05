@@ -10,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.utility.Logger;
 
 public final class GCM256Crypto extends SymmetricCrypto {
 	

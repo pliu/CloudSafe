@@ -1,4 +1,4 @@
-package com.cloudsafe.shared;
+package com.cloudsafe.utility;
 
 import java.io.BufferedWriter;
 import java.io.File;

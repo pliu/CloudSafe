@@ -2,7 +2,7 @@ package com.cloudsafe.client;
 
 import java.security.SecureRandom;
 
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.utility.Logger;
 
 /**
  * This class generates cryptographically-secure random bytes using Java's SecureRandom class. Byte

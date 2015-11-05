@@ -1,8 +1,6 @@
-package com.cloudsafe.client;
+package com.cloudsafe.data;
 
-import com.cloudsafe.shared.ImmutableBytes;
-import com.cloudsafe.shared.Logger;
-import com.cloudsafe.shared.SanitizedFileTable;
+import com.cloudsafe.utility.Logger;
 
 public final class LocalSanitizedFileTable extends SanitizedFileTable {
 	

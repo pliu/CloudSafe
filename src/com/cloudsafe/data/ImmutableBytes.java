@@ -1,4 +1,6 @@
-package com.cloudsafe.shared;
+package com.cloudsafe.data;
+
+import com.cloudsafe.utility.Logger;
 
 import java.io.Serializable;
 
@@ -10,7 +12,7 @@ public final class ImmutableBytes implements Serializable {
 	
 	public static final ImmutableBytes getInstance (byte[] bytes) {
 		if (bytes == null) {
-			Logger.log ("Bytes were null.");
+			Logger.log("Bytes were null.");
 			return null;
 		}
 		return new ImmutableBytes (bytes);

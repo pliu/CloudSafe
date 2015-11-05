@@ -1,4 +1,6 @@
-package com.cloudsafe.shared;
+package com.cloudsafe.data;
+
+import com.cloudsafe.utility.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class SanitizedFileTable implements Serializable {
 	public static SanitizedFileTable getInstance (String keyGenAlg, byte[] salt, int iterations,
 			String encAlg, byte[] IV) {
 		if (keyGenAlg == null) {
-			Logger.log ("Key generation algorithm was null.");
+			Logger.log("Key generation algorithm was null.");
 			return null;
 		}
 		if (salt == null) {

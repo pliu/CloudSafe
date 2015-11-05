@@ -1,6 +1,6 @@
 package com.cloudsafe.client;
 
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.utility.Logger;
 
 /**
  * This class delegates byte generation to individual byte generators. Byte generation is through a

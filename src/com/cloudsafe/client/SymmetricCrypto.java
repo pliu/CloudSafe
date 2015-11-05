@@ -13,8 +13,8 @@ import java.io.ObjectOutputStream;
 
 import javax.crypto.Cipher;
 
-import com.cloudsafe.shared.ImmutableBytes;
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.data.ImmutableBytes;
+import com.cloudsafe.utility.Logger;
 
 public abstract class SymmetricCrypto {
 	

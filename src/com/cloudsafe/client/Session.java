@@ -7,10 +7,13 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.ListIterator;
 
+import com.cloudsafe.data.FileMetadata;
+import com.cloudsafe.data.LocalSanitizedFileTable;
+import com.cloudsafe.templates.CloudConnection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.utility.Logger;
 
 public final class Session {
 	

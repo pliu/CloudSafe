@@ -6,7 +6,8 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-import com.cloudsafe.shared.Logger;
+import com.cloudsafe.utility.Logger;
+import com.cloudsafe.templates.CloudConnection;
 import com.dropbox.core.DbxAppInfo;
 import com.dropbox.core.DbxAuthFinish;
 import com.dropbox.core.DbxClient;
