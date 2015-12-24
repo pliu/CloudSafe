@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 import javax.crypto.Cipher;
 
 import com.cloudsafe.data.ImmutableBytes;
-import com.cloudsafe.utility.Logger;
+import com.cloudsafe.utlities.Logger;
 
 public abstract class SymmetricCrypto {
 	

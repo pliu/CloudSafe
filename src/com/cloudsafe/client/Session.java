@@ -13,7 +13,7 @@ import com.cloudsafe.templates.CloudConnection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 
-import com.cloudsafe.utility.Logger;
+import com.cloudsafe.utlities.Logger;
 
 public final class Session {
 	

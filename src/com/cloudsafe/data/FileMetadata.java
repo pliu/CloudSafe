@@ -2,7 +2,7 @@ package com.cloudsafe.data;
 
 import java.io.Serializable;
 
-import com.cloudsafe.utility.Logger;
+import com.cloudsafe.utlities.Logger;
 
 public final class FileMetadata implements Serializable {
 	

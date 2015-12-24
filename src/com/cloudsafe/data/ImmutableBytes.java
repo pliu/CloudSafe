@@ -1,6 +1,6 @@
 package com.cloudsafe.data;
 
-import com.cloudsafe.utility.Logger;
+import com.cloudsafe.utlities.Logger;
 
 import java.io.Serializable;
 
