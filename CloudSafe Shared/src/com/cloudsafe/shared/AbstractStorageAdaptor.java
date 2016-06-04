@@ -1,13 +1,13 @@
 package com.cloudsafe.shared;
 
 /**
- * Root (abstract) class for storage providers. Classes that are loadable by ServiceLoader must extend this class.
+ * Root (abstract) class for storage adaptors. Classes that are registrable in PluginRegistry must extend this class.
  *
  * Next Steps:
  * - look into locking/concurrency control to ensure that while a file is being uploaded, downloaded, or deleted, it
  *   will not be accessed by another process that could result in an inconsistent state
  */
-public abstract class AbstractStorageProvider implements Registrable {
+public abstract class AbstractStorageAdaptor implements Registrable, Creatable {
 
     /**
      * Deletes the data at the given path.

@@ -9,12 +9,12 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import com.cloudsafe.config.Consts;
+
 /**
  * Created by pengl on 5/29/2016.
  */
-class PluginLoader {
-
-    private static final String MANIFEST_CLASS_KEY = "Plugin-Classes";
+final class PluginLoader {
 
     private final Registry registry;
 
@@ -44,17 +44,11 @@ class PluginLoader {
             for (String pluginClass : pluginClasses) {
                 try {
                     Class c = classloader.loadClass(pluginClass);
-                    Object instance = c.newInstance();
-                    registry.register(instance);
+                    registry.register(c);
 
                 } catch (ClassNotFoundException e) {
                     System.out.println(pluginClass + " not found");
-                } catch (IllegalAccessException e) {
-                    System.out.println(pluginClass + " is not accessible");
-                } catch (InstantiationException e) {
-                    System.out.println("Could not instantiate " + pluginClass);
                 }
-
             }
 
         } catch (MalformedURLException e) {
@@ -68,7 +62,7 @@ class PluginLoader {
             Manifest manifest = jarFile.getManifest();
             if (manifest != null) {
                 Attributes properties = manifest.getMainAttributes();
-                String unparsed = properties.getValue(MANIFEST_CLASS_KEY);
+                String unparsed = properties.getValue(Consts.PLUGIN_MANIFEST_CLASS_KEY);
                 if (unparsed != null) {
                     return parseString(unparsed);
                 } else {
