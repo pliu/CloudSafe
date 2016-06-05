@@ -12,7 +12,7 @@ import java.util.jar.Manifest;
 import com.cloudsafe.config.Consts;
 
 /**
- * Created by pengl on 5/29/2016.
+ *
  */
 final class PluginLoader {
 
@@ -45,12 +45,10 @@ final class PluginLoader {
                 try {
                     Class c = classloader.loadClass(pluginClass);
                     registry.register(c);
-
                 } catch (ClassNotFoundException e) {
                     System.out.println(pluginClass + " not found");
                 }
             }
-
         } catch (MalformedURLException e) {
             System.out.println("Malformed URL: jar:file:" + jar.getAbsolutePath() + "!/");
         }

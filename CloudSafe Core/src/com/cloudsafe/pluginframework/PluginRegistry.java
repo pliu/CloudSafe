@@ -5,7 +5,8 @@ import com.cloudsafe.shared.Registrable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.lang.reflect.Modifier;
+import java.util.TreeMap;
 
 /**
  * Registry registers instances of Registrable and stores them in a HashMap, keyed by a String (the name of the
@@ -25,59 +26,76 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
             return false;
         }
 
-        Method[] methods = isRegistrable(klazz);
-
-        if (methods == null) {
+        Bundle bundle = isRegistrable(klazz);
+        if (bundle == null) {
             return false;
         }
-        if (isCreatable(klazz) == null) {
-            return false;
-        }
-
-        Method getName = methods[0];
-        Method getVersion = methods[1];
-        Method getDescription = methods[2];
-        String name, version, description;
-
-        try {
-            name = (String) getName.invoke(null);
-            version = (String) getVersion.invoke(null);
-            description = (String) getDescription.invoke(null);
-        }
-        catch (IllegalAccessException e) {
-            System.out.println("Illegal access: " + e);
-            return false;
-        }
-        catch (InvocationTargetException e) {
+        if (!isCreatable(klazz)) {
             return false;
         }
 
-        HashMap<String, Class<? extends Registrable>> versions;
+        String name = bundle.getName();
+        TreeMap<String, Bundle<T>> versions;
         if (registry.containsKey(name)) {
             versions = registry.get(name);
         } else {
-            versions = new HashMap<>();
+            versions = new TreeMap<>();
         }
 
+        String version = bundle.getVersion();
         if (versions.containsKey(version)) {
             System.out.println(name + "-" + version + " already registered");
             return false;
         }
-        versions.put(version, klazz);
+        versions.put(version, bundle);
         registry.put(name, versions);
         return true;
     }
 
-    // public T get
-
-    private Method isCreatable(Class<T> klazz) {
-        try {
-            Method method = klazz.getDeclaredMethod(Creatable.NEW_INSTANCE);
-            return method;
-        }
-        catch (NoSuchMethodException e) {
-            System.out.println("Invalid implementation of Creatable: " + e);
+    @Override
+    public T get(String name, String version) {
+        TreeMap<String, Bundle<T>> versions = registry.get(name);
+        if (versions == null) {
             return null;
+        }
+        Bundle<T> bundle = versions.get(version);
+        if (bundle == null) {
+            return null;
+        }
+        try {
+            Method newInstance = bundle.getTClass().getDeclaredMethod(Creatable.NEW_INSTANCE);
+            return (T) newInstance.invoke(null);
+        } catch (NoSuchMethodException e) {
+            return null;
+        } catch (InvocationTargetException e) {
+            return null;
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
+
+    private boolean isCreatable(Class<T> klazz) {
+        try {
+            Method newInstance = klazz.getDeclaredMethod(Creatable.NEW_INSTANCE);
+            if (!Modifier.isStatic(newInstance.getModifiers())) {
+                System.out.println("getDescription must be static");
+                return false;
+            }
+            Object obj = newInstance.invoke(null);
+            if (!klazz.isInstance(obj)) {
+                System.out.println("newInstance must return a non-null instance of " + klazz);
+                return false;
+            }
+            return true;
+        } catch (NoSuchMethodException e) {
+            System.out.println("Invalid implementation of Creatable: " + e);
+            return false;
+        } catch (IllegalAccessException e) {
+            System.out.println("Must be public: " + e);
+            return false;
+        } catch (InvocationTargetException e) {
+            System.out.println("Must be static: " + e);
+            return false;
         }
     }
 
