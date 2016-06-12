@@ -5,15 +5,20 @@ import com.cloudsafe.shared.Registrable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
- *
+ * A registry for storing Registrables, mapped by name and version.
  */
 public abstract class Registry<T extends Registrable> {
 
+    // A TreeMap mapping the name of the Registrables to a TreeMap mapping the versions of those Registrables to Bundles
+    // of the registered classes.
     protected final TreeMap<String, TreeMap<String, Bundle<T>>> registry;
+
+    // Maintains the class of the generic used to create the Registry (for runtime type-checking and casting to the
+    // generic).
     protected final Class<T> tclass;
 
     protected Registry(Class<T> tclass) {
@@ -21,31 +26,63 @@ public abstract class Registry<T extends Registrable> {
         this.tclass = tclass;
     }
 
+    /**
+     * Given a path, creates a Loader object and attempts to register classes from jars in the path.
+     * @param path The String representing the path to the jars from which to register classes.
+     */
     public final void loadPluginsFromDir(String path) {
-        PluginLoader loader = new PluginLoader(this);
+        Loader loader = new Loader(this);
         loader.loadPluginsFromDir(path);
     }
 
+    /**
+     * Given a Class, attempts to register it. The implementation should check
+     * @param klazz The Class to be registered.
+     * @return Returns true if registration is successful, false otherwise.
+     */
     public abstract boolean register(Class klazz);
 
+    /**
+     * Given a name and a version, returns an instance of the associated Registrable. The implementation should cast the
+     * returned object to the generic's class.
+     * @param name The String representing the name of the Registrable to get.
+     * @param version The String representing the version of the Registrable to get.
+     * @return Returns an instance of the Registrable with the corresponding name and version or null if not registered.
+     */
     public abstract T get(String name, String version);
 
+    /**
+     * Removes all Registrables from the Registry.
+     */
     public final void reset() {
         registry.clear();
     }
 
+    /**
+     *
+     * @return Returns an Iterable (in ascending order) of Strings of the names of Registrables in the Registry.
+     */
     public final Iterable<String> getNames() {
-        return registry.keySet();
+        return new TreeSet<>(registry.keySet());
     }
 
+    /**
+     *
+     * @param name The String representing the name of the Registrables to get.
+     * @return Returns an Iterable (in ascending order, ordered by version) of Bundles of the versions of Registrables
+     * with the given name in the Registry.
+     */
     public final Iterable<Bundle<T>> getBundles(String name) {
         TreeMap<String, Bundle<T>> versions = registry.get(name);
         if (versions != null) {
-            return versions.values();
+            return new TreeSet<>(versions.values());
         }
-        return new ArrayList<>();
+        return new TreeSet<>();
     }
 
+    /**
+     * Returns a Bundle
+     */
     protected final Bundle isRegistrable(Class<T> klazz) {
         try {
             Method getName = klazz.getDeclaredMethod(Registrable.GET_NAME);

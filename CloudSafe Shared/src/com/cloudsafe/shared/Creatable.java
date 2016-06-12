@@ -1,7 +1,8 @@
 package com.cloudsafe.shared;
 
 /**
- *
+ * The interface that must be implemented for PluginRegistry to be able to return an instance of the given plugin. The
+ * validity of the expected static method is checked at registration by PluginRegistry.
  */
 public interface Creatable {
 

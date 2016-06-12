@@ -2,6 +2,9 @@ package com.cloudsafe.data;
 
 import java.io.Serializable;
 
+/**
+ *
+ */
 public final class ImmutableBytes implements Serializable {
 	
 	private static final long serialVersionUID = 0L;

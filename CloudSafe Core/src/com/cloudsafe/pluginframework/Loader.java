@@ -12,20 +12,25 @@ import java.util.jar.Manifest;
 import com.cloudsafe.config.Consts;
 
 /**
- *
+ * Loads valid classes, listed under the MANIFEST.MF's "Plugin-Classes" property, from jars in the given directories and
+ * registers them in the given Registry.
+ * The class is package local as it is only used by Registry's loadPluginsFromDir method.
  */
-final class PluginLoader {
+final class Loader {
 
     private final Registry registry;
 
-    PluginLoader(Registry registry) {
+    Loader(Registry registry) {
         this.registry = registry;
     }
 
+    /**
+     * Given a valid directory path, calls loadPluginsFromJar on each jar in the directory.
+     */
     void loadPluginsFromDir(String path) {
         File dir = new File(path);
         if (isDirectoryPath(dir)) {
-            File[] files = dir.listFiles((File file, String name) -> {
+            File[] files = dir.listFiles((file, name) -> {
                 return name.endsWith(".jar");
             });
             for (File file : files) {
@@ -36,11 +41,16 @@ final class PluginLoader {
         }
     }
 
+    /**
+     * Given a jar, creates a new URLClassLoader and loads valid classes, listed under the MANIFEST.MF's
+     * "Plugin-Classes" property, and registers them in the given Registry. Relies on the Registry's register method to
+     * type-check the loaded class.
+     */
     private void loadPluginsFromJar(File jar) {
         String[] pluginClasses = getManifestClasses(jar);
         try {
-            URLClassLoader classloader = new URLClassLoader(new URL[]{new URL("jar:file:" +
-                    jar.getAbsolutePath() + "!/")});
+            URLClassLoader classloader = new URLClassLoader(new URL[]{new URL("jar:file:" + jar.getAbsolutePath() +
+                    "!/")});
             for (String pluginClass : pluginClasses) {
                 try {
                     Class c = classloader.loadClass(pluginClass);
@@ -54,6 +64,10 @@ final class PluginLoader {
         }
     }
 
+    /**
+     * Given a jar, returns an Array of Strings of the classes to load from the jar as listed under the MANIFEST.MF's
+     * "Plugin-Classes" property.
+     */
     private String[] getManifestClasses(File jar) {
         try {
             JarFile jarFile = new JarFile(jar);
@@ -77,10 +91,16 @@ final class PluginLoader {
         }
     }
 
+    /**
+     * Returns whether the given path is a valid directory path (exists and is a directory).
+     */
     private static boolean isDirectoryPath(File path) {
         return path.exists() && path.isDirectory();
     }
 
+    /**
+     * Given a String, returns an Array of String trimmed tokens as tokenized by ",".
+     */
     private static String[] parseString(String str) {
         String[] classes = str.split(",");
         for (int i = 0; i < classes.length; i++) {

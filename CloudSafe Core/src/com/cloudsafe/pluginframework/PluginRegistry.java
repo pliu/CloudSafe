@@ -9,16 +9,22 @@ import java.lang.reflect.Modifier;
 import java.util.TreeMap;
 
 /**
- * Registry registers instances of Registrable and stores them in a HashMap, keyed by a String (the name of the
- * Registrable). If multiple Registrables have the same name, only one version is stored. Applications can retrieve
- * a list of the names of registered Registrables or the instance, the description, or version of a given Registrable.
+ * A registry for storing plugins (Registrable and Creatable), mapped by name and version.
  */
 public final class PluginRegistry<T extends Registrable & Creatable> extends Registry<T> {
 
+    /**
+     * @param tclass The class of the generic used to create the PluginRegistry.
+     */
     public PluginRegistry(Class<T> tclass) {
         super(tclass);
     }
 
+    /**
+     *
+     * @param klazz The Class to be registered.
+     * @return Returns true if registration is successful, false otherwise.
+     */
     @Override
     public boolean register(Class klazz) {
         if (!tclass.isAssignableFrom(klazz)) {
@@ -52,6 +58,12 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
         return true;
     }
 
+    /**
+     * Given a name and a version, returns an instance of the associated plugin.
+     * @param name The String representing the name of the plugin to get.
+     * @param version The String representing the version of the plugin to get.
+     * @return Returns an instance of the plugin with the corresponding name and version or null if not registered.
+     */
     @Override
     public T get(String name, String version) {
         TreeMap<String, Bundle<T>> versions = registry.get(name);
@@ -74,6 +86,9 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
         }
     }
 
+    /**
+     *
+     */
     private boolean isCreatable(Class<T> klazz) {
         try {
             Method newInstance = klazz.getDeclaredMethod(Creatable.NEW_INSTANCE);
