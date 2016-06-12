@@ -1,7 +1,12 @@
 package com.cloudsafe.data;
 
+import com.cloudsafe.shared.ImmutableBytes;
+
 import java.io.Serializable;
 
+/**
+ *
+ */
 public final class FileMetadata implements Serializable {
 	
 	private static final long serialVersionUID = 0L;

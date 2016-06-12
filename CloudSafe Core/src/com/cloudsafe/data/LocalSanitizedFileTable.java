@@ -1,5 +1,7 @@
 package com.cloudsafe.data;
 
+import com.cloudsafe.shared.ImmutableBytes;
+
 public final class LocalSanitizedFileTable extends SanitizedFileTable {
 	
 	private static final long serialVersionUID = 0L;

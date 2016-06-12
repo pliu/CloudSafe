@@ -1,5 +1,7 @@
 package com.cloudsafe.data;
 
+import com.cloudsafe.shared.ImmutableBytes;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;

@@ -6,8 +6,8 @@ public class MockInvalid4 extends AbstractMock {
     private static final String VERSION = "1.0.0";
     private static final String DESCRIPTION = "";
 
-    static MockValid newInstance() {
-        return new MockValid();
+    static MockInvalid4 newInstance() {
+        return new MockInvalid4();
     }
 
     static String getName() {

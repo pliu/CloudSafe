@@ -6,8 +6,8 @@ public class MockInvalid2 {
     private static final String VERSION = "1.0.0";
     private static final String DESCRIPTION = "";
 
-    public static MockValid newInstance() {
-        return new MockValid();
+    public static MockInvalid2 newInstance() {
+        return new MockInvalid2();
     }
 
     public static String getName() {

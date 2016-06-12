@@ -35,21 +35,14 @@ public abstract class Registry<T extends Registrable> {
         loader.loadPluginsFromDir(path);
     }
 
+    // TODO
     /**
-     * Given a Class, attempts to register it. The implementation should check
+     * Given a Class, attempts to register it.
+     * The implementation should check
      * @param klazz The Class to be registered.
      * @return Returns true if registration is successful, false otherwise.
      */
     public abstract boolean register(Class klazz);
-
-    /**
-     * Given a name and a version, returns an instance of the associated Registrable. The implementation should cast the
-     * returned object to the generic's class.
-     * @param name The String representing the name of the Registrable to get.
-     * @param version The String representing the version of the Registrable to get.
-     * @return Returns an instance of the Registrable with the corresponding name and version or null if not registered.
-     */
-    public abstract T get(String name, String version);
 
     /**
      * Removes all Registrables from the Registry.
@@ -59,18 +52,19 @@ public abstract class Registry<T extends Registrable> {
     }
 
     /**
-     *
+     * Returns the names of Registrables in the Registry.
      * @return Returns an Iterable (in ascending order) of Strings of the names of Registrables in the Registry.
+     * Mutating the returned Iterable does not affect the Registry.
      */
     public final Iterable<String> getNames() {
         return new TreeSet<>(registry.keySet());
     }
 
     /**
-     *
+     * Returns Registrables with the given name in the Registry.
      * @param name The String representing the name of the Registrables to get.
-     * @return Returns an Iterable (in ascending order, ordered by version) of Bundles of the versions of Registrables
-     * with the given name in the Registry.
+     * @return Returns an Iterable (in ascending order, ordered by version) of Bundles of Registrables with the given
+     * name in the Registry. Mutating the returned Iterable does not affect the Registry.
      */
     public final Iterable<Bundle<T>> getBundles(String name) {
         TreeMap<String, Bundle<T>> versions = registry.get(name);
@@ -80,6 +74,7 @@ public abstract class Registry<T extends Registrable> {
         return new TreeSet<>();
     }
 
+    // TODO
     /**
      * Returns a Bundle
      */

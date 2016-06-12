@@ -20,8 +20,9 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
         super(tclass);
     }
 
+    // TODO
     /**
-     *
+     * Given a Class, attempts to register it.
      * @param klazz The Class to be registered.
      * @return Returns true if registration is successful, false otherwise.
      */
@@ -63,8 +64,8 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
      * @param name The String representing the name of the plugin to get.
      * @param version The String representing the version of the plugin to get.
      * @return Returns an instance of the plugin with the corresponding name and version or null if not registered.
+     * Casting is safe as adherence to the plugin's type and interfaces is checked at registration.
      */
-    @Override
     public T get(String name, String version) {
         TreeMap<String, Bundle<T>> versions = registry.get(name);
         if (versions == null) {
@@ -86,6 +87,7 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
         }
     }
 
+    // TODO
     /**
      *
      */

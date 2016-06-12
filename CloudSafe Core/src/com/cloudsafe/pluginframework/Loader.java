@@ -43,8 +43,10 @@ final class Loader {
 
     /**
      * Given a jar, creates a new URLClassLoader and loads valid classes, listed under the MANIFEST.MF's
-     * "Plugin-Classes" property, and registers them in the given Registry. Relies on the Registry's register method to
-     * type-check the loaded class.
+     * "Plugin-Classes" property, and registers them in the given Registry.
+     * Since a new URLClassLoader is created for each jar, the classes in a given jar are isolated from classes in other
+     * jars.
+     * Relies on the Registry's register method to type-check the loaded class.
      */
     private void loadPluginsFromJar(File jar) {
         String[] pluginClasses = getManifestClasses(jar);
