@@ -6,7 +6,6 @@ import com.cloudsafe.shared.Registrable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.TreeMap;
 
 /**
  * A registry for storing plugins (Registrable and Creatable), mapped by name and version.
@@ -20,9 +19,12 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
         super(tclass);
     }
 
-    // TODO
     /**
      * Given a Class, attempts to register it.
+     * Checks that the class is a subclass of the generic, tclass, and that it is satisfies the implicit interface of
+     * Creatable before registering it through protectedRegister.
+     * If multiple classes with the same associated name and version are registered, the first will succeed and the
+     * subsequent ones will fail.
      * @param klazz The Class to be registered.
      * @return Returns true if registration is successful, false otherwise.
      */
@@ -32,31 +34,10 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
             System.out.println(klazz + " is not assignable to " + tclass);
             return false;
         }
-
-        Bundle bundle = isRegistrable(klazz);
-        if (bundle == null) {
-            return false;
-        }
         if (!isCreatable(klazz)) {
             return false;
         }
-
-        String name = bundle.getName();
-        TreeMap<String, Bundle<T>> versions;
-        if (registry.containsKey(name)) {
-            versions = registry.get(name);
-        } else {
-            versions = new TreeMap<>();
-        }
-
-        String version = bundle.getVersion();
-        if (versions.containsKey(version)) {
-            System.out.println(name + "-" + version + " already registered");
-            return false;
-        }
-        versions.put(version, bundle);
-        registry.put(name, versions);
-        return true;
+        return protectedRegister(klazz);
     }
 
     /**
@@ -67,14 +48,7 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
      * Casting is safe as adherence to the plugin's type and interfaces is checked at registration.
      */
     public T get(String name, String version) {
-        TreeMap<String, Bundle<T>> versions = registry.get(name);
-        if (versions == null) {
-            return null;
-        }
-        Bundle<T> bundle = versions.get(version);
-        if (bundle == null) {
-            return null;
-        }
+        Bundle<T> bundle = protectedGet(name, version);
         try {
             Method newInstance = bundle.getTClass().getDeclaredMethod(Creatable.NEW_INSTANCE);
             return (T) newInstance.invoke(null);
@@ -87,9 +61,11 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
         }
     }
 
-    // TODO
     /**
-     *
+     * Given a Class implementing Creatable, validates that it contains the public static method newInstance and that it
+     * returns an instance of itself.
+     * This is required because Creatable cannot enforce the implementation of its static method (newInstance)
+     * because there cannot be abstract static methods.
      */
     private boolean isCreatable(Class<T> klazz) {
         try {

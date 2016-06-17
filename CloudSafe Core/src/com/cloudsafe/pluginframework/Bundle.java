@@ -3,8 +3,8 @@ package com.cloudsafe.pluginframework;
 import com.cloudsafe.shared.Registrable;
 
 /**
- * The unit of registration in a Registry. Bundles relevant information (class, name, version, and description) into a
- * single object. Comparable by version.
+ * Immutable unit of registration in a Registry. Bundles relevant information (class, name, version, and description)
+ * into a single object. Comparable by version.
  */
 public final class Bundle<T extends Registrable> implements Comparable<Bundle<T>> {
 
@@ -22,9 +22,10 @@ public final class Bundle<T extends Registrable> implements Comparable<Bundle<T>
     }
 
     /**
-     * getTClass is package local as reflection on the Registrable (e.g.: instantiation) is handled by the Registry.
+     * Returns the bundled Registrable.
+     * @return Returns a Class that implements Registrable.
      */
-    Class<T> getTClass() {
+    public Class<T> getTClass() {
         return tclass;
     }
 

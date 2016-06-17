@@ -3,12 +3,12 @@ package com.cloudsafe.shared;
 import java.io.Serializable;
 
 /**
- * A wrapper that provides immuatbility to the wrapped byte[].
+ * A wrapper that provides immutability to the wrapped byte[].
  */
 public final class ImmutableBytes implements Serializable {
 
     // The instance that is returned if ImmutableBytes is instantiated with null or an empty byte[].
-    private static final ImmutableBytes EMPTY_BYTES = new ImmutableBytes(new byte[0]);
+    static final ImmutableBytes EMPTY_BYTES = new ImmutableBytes(new byte[0]);
 
     // Must be incremented everytime this class is changed.
     private static final long serialVersionUID = 0L;
