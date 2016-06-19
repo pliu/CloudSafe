@@ -1,93 +1,119 @@
 package com.cloudsafe.data;
 
-import com.cloudsafe.shared.ImmutableBytes;
+import com.cloudsafe.utils.Utils;
 
 import java.io.Serializable;
 
 /**
- * Holds the metadata associated with an encrypted file
+ * Immutable metadata associated with an encrypted file.
+ * Each file has its own unique key so that users can share individual files independently of each other.
  */
 public final class FileMetadata implements Serializable {
-
-    static final FileMetadata EMPTY_METADATA = new FileMetadata("", "", null, null);
 
     // Must be incremented everytime this class is changed.
     private static final long serialVersionUID = 0L;
 
     private final String localFilename;
+    private final String description;
     private final String remoteFilename;
-    private final ImmutableBytes key;
-    private final ImmutableBytes IV;
+    private final byte[] key;
+    private final byte[] IV;
 
     /**
-     * Factory method
-     * @param localFilename
-     * @param remoteFilename
-     * @param key
-     * @param IV
-     * @return
+     * Factory method for wrapping an encrypted file's metadata in an instance of FileMetadata.
+     *
+     * @param localFilename  The String representing the original filename.
+     * @param description    The String description of the file.
+     * @param remoteFilename The String representing the canonical path of the file on the remote store.
+     * @param key            The byte[] used as the key to encrypt the file.
+     * @param IV             The byte[] used as the IV to encrypt the file.
+     * @return Returns a FileMetadata object containing the above-mentioned metadata.
+     * @throws IllegalArgumentException If localFilename or remoteFilename are null or empty, or if description, key, or
+     *                                  IV are null.
      */
-    public static FileMetadata getInstance(String localFilename, String remoteFilename, byte[] key, byte[] IV) {
-        if (localFilename == null) {
-            // Logger.log ("Local filename was null.");
-            return null;
+    public static FileMetadata getInstance(String localFilename, String description, String remoteFilename, byte[] key,
+                                           byte[] IV) throws IllegalArgumentException {
+        if (localFilename == null || localFilename.equals("")) {
+            System.out.println("Instantiating FileMetadata with null or empty localFilename");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null or empty localFilename");
         }
-        if (remoteFilename == null) {
-            // Logger.log ("Remote filename was null.");
-            return null;
+        if (description == null) {
+            System.out.println("Instantiating FileMetadata with null description");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null description");
+        }
+        if (remoteFilename == null || remoteFilename.equals("")) {
+            System.out.println("Instantiating FileMetadata with null or empty remoteFilename");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null or empty remoteFilename");
         }
         if (key == null) {
-            // Logger.log ("Key was null.");
-            return null;
+            System.out.println("Instantiating FileMetadata with null key");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null key");
         }
         if (IV == null) {
-            // Logger.log ("IV was null.");
-            return null;
+            System.out.println("Instantiating FileMetadata with null IV");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null IV");
         }
 
-        return new FileMetadata(localFilename, remoteFilename, key, IV);
+        return new FileMetadata(localFilename, description, remoteFilename, key, IV);
     }
 
     /**
-     * Private constructor called by getInstance. Wraps the original byte[]s in ImmutableByte from
-     * changes in the original byte[].
+     * Private constructor called by getInstance. Defensively copies key and IV to insulate the local copies from
+     * changes to the originals.
      */
-    private FileMetadata(String localFilename, String remoteFilename, byte[] key, byte[] IV) {
+    private FileMetadata(String localFilename, String description, String remoteFilename, byte[] key, byte[] IV) {
         this.localFilename = localFilename;
-        this.remoteFilename = remoteFilename;
-        this.key = ImmutableBytes.getInstance(key);
-        this.IV = ImmutableBytes.getInstance(IV);
+        this.description = description;
+        this.remoteFilename =  remoteFilename;
+        this.key = Utils.copy(key);
+        this.IV = Utils.copy(IV);
     }
 
     /**
+     * Returns the original filename.
      *
-     * @return
+     * @return Returns a non-null, non-empty String (verified at creation in the factory method).
      */
-    public final String getLocalName() {
+    public String getLocalName() {
         return localFilename;
     }
 
     /**
+     * Returns a description of the file.
      *
-     * @return
+     * @return Returns a non-null String (verified at creation in the factory method).
      */
-    public final String getRemoteName() {
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Returns the filename used in the remote store.
+     *
+     * @return Returns a non-null, non-empty String (verified at creation in the factory method).
+     */
+    public String getRemoteName() {
         return remoteFilename;
     }
 
     /**
+     * Returns a copy of the key used to encrypt this file.
      *
-     * @return
+     * @return Returns a non-null byte[] (verified at creation in the factory method). Changes to the returned byte[] do
+     * not affect the local key.
      */
-    public final byte[] getKey() {
-        return key.getBytes();
+    public byte[] getKey() {
+        return Utils.copy(key);
     }
 
     /**
+     * Returns a copy of the IV used to encrypt this file.
      *
-     * @return
+     * @return Returns a non-null byte[] (verified at creation in the factory method). Changes to the returned byte[] do
+     * not affect the local IV.
      */
-    public final byte[] getIV() {
-        return IV.getBytes();
+    public byte[] getIV() {
+        return Utils.copy(IV);
     }
+
 }

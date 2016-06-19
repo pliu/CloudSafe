@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * A registry for storing plugins (Registrable and Creatable), mapped by name and version.
+ * Registry for storing plugins (Registrable and Creatable), mapped by name and version.
  */
 public final class PluginRegistry<T extends Registrable & Creatable> extends Registry<T> {
 
@@ -25,6 +25,7 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
      * Creatable before registering it through protectedRegister.
      * If multiple classes with the same associated name and version are registered, the first will succeed and the
      * subsequent ones will fail.
+     *
      * @param klazz The Class to be registered.
      * @return Returns true if registration is successful, false otherwise.
      */
@@ -42,7 +43,8 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
 
     /**
      * Given a name and a version, returns an instance of the associated plugin.
-     * @param name The String representing the name of the plugin to get.
+     *
+     * @param name    The String representing the name of the plugin to get.
      * @param version The String representing the version of the plugin to get.
      * @return Returns an instance of the plugin with the corresponding name and version or null if not registered.
      * Casting is safe as adherence to the plugin's type and interfaces is checked at registration.

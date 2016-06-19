@@ -1,14 +1,14 @@
 package com.cloudsafe;
 
+import com.cloudsafe.data.FileMetadataTest;
 import com.cloudsafe.pluginframework.PluginRegistryTest;
-import com.cloudsafe.shared.ImmutableBytesTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         PluginRegistryTest.class,
-        ImmutableBytesTest.class,
+        FileMetadataTest.class,
 })
 public class CloudSafeCoreTestSuite {
 }

@@ -25,46 +25,52 @@ public class PluginRegistryTest {
         assertEquals("1.0.0", bundle.getVersion());
     }
 
-    // Does not implement getName, getVersion, getDescription, or newInstance methods
+    // Does not extend AbstractMock (but does implement Registrable and Creatable)
     @Test
-    public void registerInvalid1() throws Exception {
-        assertFalse(storageRegistry.register(MockInvalid1.class));
-    }
-
-    // Does not extend AbstractMock
-    @Test
-    public void registerInvalid2() throws Exception {
-        assertFalse(storageRegistry.register(MockInvalid2.class));
+    public void registerInvalidSuper() throws Exception {
+        assertFalse(storageRegistry.register(MockInvalidSuper.class));
     }
 
     // Implements non-static getName, getVersion, getDescription, and newInstance methods
     @Test
-    public void registerInvalid3() throws Exception {
-        assertFalse(storageRegistry.register(MockInvalid3.class));
+    public void registerInvalidStatic() throws Exception {
+        assertFalse(storageRegistry.register(MockInvalidStatic1.class));
+        assertFalse(storageRegistry.register(MockInvalidStatic2.class));
+        assertFalse(storageRegistry.register(MockInvalidStatic3.class));
+        assertFalse(storageRegistry.register(MockInvalidStatic4.class));
     }
 
     // Implements non-public getName, getVersion, getDescription, and newInstance methods
     @Test
-    public void registerInvalid4() throws Exception {
-        assertFalse(storageRegistry.register(MockInvalid4.class));
+    public void registerInvalidPublic() throws Exception {
+        assertFalse(storageRegistry.register(MockInvalidPublic1.class));
+        assertFalse(storageRegistry.register(MockInvalidPublic2.class));
+        assertFalse(storageRegistry.register(MockInvalidPublic3.class));
+        assertFalse(storageRegistry.register(MockInvalidPublic4.class));
     }
 
     // Name, version, and description are null
     @Test
-    public void registerInvalid5() throws Exception {
-        assertFalse(storageRegistry.register(MockInvalid5.class));
+    public void registerInvalidNull() throws Exception {
+        assertFalse(storageRegistry.register(MockInvalidNull1.class));
+        assertFalse(storageRegistry.register(MockInvalidNull2.class));
+        assertFalse(storageRegistry.register(MockInvalidNull3.class));
     }
 
     // Name and version are empty Strings
     @Test
-    public void registerInvalid6() throws Exception {
-        assertFalse(storageRegistry.register(MockInvalid6.class));
+    public void registerInvalidEmpty() throws Exception {
+        assertFalse(storageRegistry.register(MockInvalidEmpty1.class));
+        assertFalse(storageRegistry.register(MockInvalidEmpty2.class));
     }
 
     // getName, getVersion, and getDescription return non-Strings and newInstance returns a non-AbstractMock
     @Test
-    public void registerInvalid7() throws Exception {
-        assertFalse(storageRegistry.register(MockInvalid7.class));
+    public void registerInvalidReturn() throws Exception {
+        assertFalse(storageRegistry.register(MockInvalidReturn1.class));
+        assertFalse(storageRegistry.register(MockInvalidReturn2.class));
+        assertFalse(storageRegistry.register(MockInvalidReturn3.class));
+        assertFalse(storageRegistry.register(MockInvalidReturn4.class));
     }
 
     // Tests whether PluginLoader and PluginRegistry can successfully load valid plugins (and exclude missing or invalid
@@ -90,7 +96,7 @@ public class PluginRegistryTest {
 
     // Tests registry isolation from the Iterable returned by getNames
     @Test
-    public void getNames() throws Exception {
+    public void immutableGetNames() throws Exception {
         storageRegistry.register(MockValid.class);
         Set<String> names = (Set<String>) storageRegistry.getNames();
         assertEquals(1, names.size());
@@ -103,7 +109,7 @@ public class PluginRegistryTest {
 
     // Tests registry isolation from the Iterable returned by getVersions
     @Test
-    public void getBundles() throws Exception {
+    public void immutableGetBundles() throws Exception {
         storageRegistry.register(MockValid.class);
         Collection<Bundle<AbstractMock>> values = (Collection<Bundle<AbstractMock>>) storageRegistry.getBundles("Valid");
         assertEquals(1, values.size());

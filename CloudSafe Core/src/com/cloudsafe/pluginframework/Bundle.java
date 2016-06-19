@@ -23,6 +23,7 @@ public final class Bundle<T extends Registrable> implements Comparable<Bundle<T>
 
     /**
      * Returns the bundled Registrable.
+     *
      * @return Returns a Class that implements Registrable.
      */
     public Class<T> getTClass() {
@@ -31,6 +32,7 @@ public final class Bundle<T extends Registrable> implements Comparable<Bundle<T>
 
     /**
      * Returns the name associated with the bundled Registrable.
+     *
      * @return Returns a non-null, non-empty String (verified by the Registry at registration).
      */
     public String getName() {
@@ -39,6 +41,7 @@ public final class Bundle<T extends Registrable> implements Comparable<Bundle<T>
 
     /**
      * Returns the version associated with the bundled Registrable.
+     *
      * @return Returns a non-null, non-empty String (verified by the Registry at registration).
      */
     public String getVersion() {
@@ -47,6 +50,7 @@ public final class Bundle<T extends Registrable> implements Comparable<Bundle<T>
 
     /**
      * Returns the description associated with the bundled Registrable.
+     *
      * @return Returns a non-null String (verified by the Registry at registration).
      */
     public String getDescription() {

@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * A registry for storing Registrables, mapped by name and version.
+ * Registry for storing Registrables, mapped by name and version.
  */
 public abstract class Registry<T extends Registrable> {
 
@@ -30,6 +30,7 @@ public abstract class Registry<T extends Registrable> {
      * Given a Class, attempts to register it.
      * The implementation should check that the class is a subclass of the generic, tclass, that it satisfies other
      * interfaces' implicit interfaces, and use protectedRegister for registration.
+     *
      * @param klazz The Class to be registered.
      * @return Returns true if registration is successful, false otherwise.
      */
@@ -37,6 +38,7 @@ public abstract class Registry<T extends Registrable> {
 
     /**
      * Given a path, creates a Loader object and attempts to register classes from jars in the path.
+     *
      * @param path The String representing the path to the jars from which to register classes.
      */
     public final void loadPluginsFromDir(String path) {
@@ -53,6 +55,7 @@ public abstract class Registry<T extends Registrable> {
 
     /**
      * Returns the names of Registrables in the Registry.
+     *
      * @return Returns an Iterable (in ascending order) of Strings of the names of Registrables in the Registry.
      * Mutating the returned Iterable does not affect the Registry.
      */
@@ -62,6 +65,7 @@ public abstract class Registry<T extends Registrable> {
 
     /**
      * Returns Bundles of Registrables with the given name in the Registry.
+     *
      * @param name The String representing the name of the Registrables to get.
      * @return Returns an Iterable (in ascending order, ordered by version) of Bundles of Registrables with the given
      * name in the Registry. Mutating the returned Iterable does not affect the Registry.
@@ -79,6 +83,7 @@ public abstract class Registry<T extends Registrable> {
      * If multiple Registrables with the same associated name and version are registered, the first will succeed and the
      * subsequent ones will fail.
      * Classes extending Registry should use this method to register Registrables into the Registry.
+     *
      * @param klazz The Class to be registered.
      * @return Returns true if registration is successful, false otherwise.
      */
@@ -109,7 +114,8 @@ public abstract class Registry<T extends Registrable> {
     /**
      * Given a name and a version, returns the Bundle containing the associated Registrable.
      * Classes extending Registry should use this method to access Registrables in the Registry.
-     * @param name The String representing the name of the Registrable to get.
+     *
+     * @param name    The String representing the name of the Registrable to get.
      * @param version The String representing the version of the Registrable to get.
      * @return Returns the Bundle containing the Registrable with the corresponding name and version or null if not
      * registered.
@@ -170,7 +176,7 @@ public abstract class Registry<T extends Registrable> {
             }
             obj = getDescription.invoke(null);
             if (!String.class.isInstance(obj)) {
-                System.out.println("getVersion must return non-null String");
+                System.out.println("getDescription must return non-null String");
                 return null;
             }
             String description = (String) obj;

@@ -1,16 +1,16 @@
 package com.cloudsafe.pluginframework.mocks;
 
-public class MockInvalid5 extends AbstractMock {
+public class MockInvalidPublic2 extends AbstractMock {
 
-    private static final String NAME = null;
-    private static final String VERSION = null;
-    private static final String DESCRIPTION = null;
+    private static final String NAME = "InvalidPublic2";
+    private static final String VERSION = "1.0.0";
+    private static final String DESCRIPTION = "";
 
-    public static MockInvalid5 newInstance() {
-        return new MockInvalid5();
+    public static MockInvalidPublic2 newInstance() {
+        return new MockInvalidPublic2();
     }
 
-    public static String getName() {
+    static String getName() {
         return NAME;
     }
 

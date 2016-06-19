@@ -12,8 +12,8 @@ import java.util.jar.Manifest;
 import com.cloudsafe.config.Consts;
 
 /**
- * Loads valid classes, listed under the MANIFEST.MF's "Plugin-Classes" property, from jars in the given directories and
- * registers them in the given Registry.
+ * Loads valid classes, listed under the MANIFEST.MF's Consts.PLUGIN_MANIFEST_CLASS_KEY property, from jars in the given
+ * directories and registers them in the given Registry.
  * The class is package local as it is only used by Registry's loadPluginsFromDir method.
  */
 final class Loader {
