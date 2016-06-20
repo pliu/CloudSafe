@@ -31,6 +31,9 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
      */
     @Override
     public boolean register(Class klazz) {
+        if (klazz == null) {
+            return false;
+        }
         if (!tclass.isAssignableFrom(klazz)) {
             System.out.println(klazz + " is not assignable to " + tclass);
             return false;
@@ -46,11 +49,16 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
      *
      * @param name    The String representing the name of the plugin to get.
      * @param version The String representing the version of the plugin to get.
+     *                Relies on Register's protectedGet method to validate name and version.
      * @return Returns an instance of the plugin with the corresponding name and version or null if not registered.
      * Casting is safe as adherence to the plugin's type and interfaces is checked at registration.
      */
     public T get(String name, String version) {
         Bundle<T> bundle = protectedGet(name, version);
+        if (bundle == null) {
+            return null;
+        }
+
         try {
             Method newInstance = bundle.getTClass().getDeclaredMethod(Creatable.NEW_INSTANCE);
             return (T) newInstance.invoke(null);

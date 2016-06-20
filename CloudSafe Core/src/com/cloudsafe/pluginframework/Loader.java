@@ -25,9 +25,13 @@ final class Loader {
     }
 
     /**
-     * Given a valid directory path, calls loadPluginsFromJar on each jar in the directory.
+     * Given a valid directory path, calls loadPluginsFromJar on each jar in the directory and returns true; false
+     * otherwise.
      */
-    void loadPluginsFromDir(String path) {
+    boolean loadPluginsFromDir(String path) {
+        if (path == null) {
+            return false;
+        }
         File dir = new File(path);
         if (isDirectoryPath(dir)) {
             File[] files = dir.listFiles((file, name) -> {
@@ -36,8 +40,10 @@ final class Loader {
             for (File file : files) {
                 loadPluginsFromJar(file);
             }
+            return true;
         } else {
             System.out.println("Invalid path: " + path);
+            return false;
         }
     }
 
@@ -46,7 +52,7 @@ final class Loader {
      * "Plugin-Classes" property, and registers them in the given Registry.
      * Since a new URLClassLoader is created for each jar, the classes in a given jar are isolated from classes in other
      * jars.
-     * Relies on the Registry's register method to type-check the loaded class.
+     * Relies on Registry's register method to type-check the loaded class.
      */
     private void loadPluginsFromJar(File jar) {
         String[] pluginClasses = getManifestClasses(jar);
@@ -68,7 +74,7 @@ final class Loader {
 
     /**
      * Given a jar, returns an Array of Strings of the classes to load from the jar as listed under the MANIFEST.MF's
-     * "Plugin-Classes" property.
+     * Consts.PLUGIN_MANIFEST_CLASS_KEY property.
      */
     private String[] getManifestClasses(File jar) {
         try {

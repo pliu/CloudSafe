@@ -28,8 +28,8 @@ public abstract class Registry<T extends Registrable> {
 
     /**
      * Given a Class, attempts to register it.
-     * The implementation should check that the class is a subclass of the generic, tclass, that it satisfies other
-     * interfaces' implicit interfaces, and use protectedRegister for registration.
+     * The implementation should check that the class non-null and is a subclass of the generic, tclass, that it
+     * satisfies other interfaces' implicit interfaces, and use protectedRegister for registration.
      *
      * @param klazz The Class to be registered.
      * @return Returns true if registration is successful, false otherwise.
@@ -39,11 +39,13 @@ public abstract class Registry<T extends Registrable> {
     /**
      * Given a path, creates a Loader object and attempts to register classes from jars in the path.
      *
-     * @param path The String representing the path to the jars from which to register classes.
+     * @param path The String representing the path to the jars from which to register classes. Relies on Loader's
+     *             loadPluginsFromDir method to validate path.
+     * @return Returns true if the path is valid and false otherwise.
      */
-    public final void loadPluginsFromDir(String path) {
+    public final boolean loadPluginsFromDir(String path) {
         Loader loader = new Loader(this);
-        loader.loadPluginsFromDir(path);
+        return loader.loadPluginsFromDir(path);
     }
 
     /**
@@ -71,9 +73,11 @@ public abstract class Registry<T extends Registrable> {
      * name in the Registry. Mutating the returned Iterable does not affect the Registry.
      */
     public final Iterable<Bundle<T>> getBundles(String name) {
-        TreeMap<String, Bundle<T>> versions = registry.get(name);
-        if (versions != null) {
-            return new TreeSet<>(versions.values());
+        if (name != null) {
+            TreeMap<String, Bundle<T>> versions = registry.get(name);
+            if (versions != null) {
+                return new TreeSet<>(versions.values());
+            }
         }
         return new TreeSet<>();
     }
@@ -84,7 +88,7 @@ public abstract class Registry<T extends Registrable> {
      * subsequent ones will fail.
      * Classes extending Registry should use this method to register Registrables into the Registry.
      *
-     * @param klazz The Class to be registered.
+     * @param klazz The Class to be registered. Relies on callers to ensure a non-null value.
      * @return Returns true if registration is successful, false otherwise.
      */
     protected final boolean protectedRegister(Class<T> klazz) {
@@ -121,6 +125,9 @@ public abstract class Registry<T extends Registrable> {
      * registered.
      */
     protected final Bundle<T> protectedGet(String name, String version) {
+        if (name == null || version == null) {
+            return null;
+        }
         TreeMap<String, Bundle<T>> versions = registry.get(name);
         if (versions == null) {
             return null;

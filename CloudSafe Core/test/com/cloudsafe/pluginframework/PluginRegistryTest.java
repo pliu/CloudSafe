@@ -25,6 +25,11 @@ public class PluginRegistryTest {
         assertEquals("1.0.0", bundle.getVersion());
     }
 
+    @Test
+    public void registerNull() throws Exception {
+        assertFalse(storageRegistry.register(null));
+    }
+
     // Does not extend AbstractMock (but does implement Registrable and Creatable)
     @Test
     public void registerInvalidSuper() throws Exception {
@@ -64,7 +69,7 @@ public class PluginRegistryTest {
         assertFalse(storageRegistry.register(MockInvalidEmpty2.class));
     }
 
-    // getName, getVersion, and getDescription return non-Strings and newInstance returns a non-AbstractMock
+    // getName, getVersion, and getDescription return non-Strings and newInstance returns a non-MockInvalidReturn4
     @Test
     public void registerInvalidReturn() throws Exception {
         assertFalse(storageRegistry.register(MockInvalidReturn1.class));
@@ -77,7 +82,7 @@ public class PluginRegistryTest {
     // plugins) from jars in a directory using the jar's MANIFEST.MF to indicate which classes to load
     @Test
     public void loadPluginsFromDir() throws Exception {
-        storageRegistry.loadPluginsFromDir("D:\\Work\\Programming\\CloudSafe\\test");
+        assertTrue(storageRegistry.loadPluginsFromDir("D:\\Work\\Programming\\CloudSafe\\test"));
         Set<String> names = (Set<String>) storageRegistry.getNames();
         assertEquals(1, names.size());
         String name = (String) names.toArray()[0];
@@ -88,10 +93,48 @@ public class PluginRegistryTest {
     }
 
     @Test
+    public void loadPluginFromNullPath() throws Exception {
+        assertFalse(storageRegistry.loadPluginsFromDir(null));
+    }
+
+    @Test
+    public void loadPluginsFromEmptyPath() throws Exception {
+        assertFalse(storageRegistry.loadPluginsFromDir(""));
+    }
+
+    @Test
     public void get() throws Exception {
         storageRegistry.loadPluginsFromDir("D:\\Work\\Programming\\CloudSafe\\test");
         AbstractMock test = storageRegistry.get("Valid", "1.0.0");
         assertTrue(test.testMethod());
+    }
+
+    @Test
+    public void getNullName() throws Exception {
+        storageRegistry.register(MockValid.class);
+        AbstractMock test = storageRegistry.get(null, "1.0.0");
+        assertEquals(null, test);
+    }
+
+    @Test
+    public void getNullVersion() throws Exception {
+        storageRegistry.register(MockValid.class);
+        AbstractMock test = storageRegistry.get("Valid", null);
+        assertEquals(null, test);
+    }
+
+    @Test
+    public void getEmptyName() throws Exception {
+        storageRegistry.register(MockValid.class);
+        AbstractMock test = storageRegistry.get("", "1.0.0");
+        assertEquals(null, test);
+    }
+
+    @Test
+    public void getEmptyVersion() throws Exception {
+        storageRegistry.register(MockValid.class);
+        AbstractMock test = storageRegistry.get("Valid", "");
+        assertEquals(null, test);
     }
 
     // Tests registry isolation from the Iterable returned by getNames
@@ -118,6 +161,20 @@ public class PluginRegistryTest {
         }
         values = (Collection<Bundle<AbstractMock>>) storageRegistry.getBundles("Valid");
         assertEquals(1, values.size());
+    }
+
+    @Test
+    public void getBundlesNull() throws Exception {
+        storageRegistry.register(MockValid.class);
+        Collection<Bundle<AbstractMock>> values = (Collection<Bundle<AbstractMock>>) storageRegistry.getBundles(null);
+        assertEquals(0, values.size());
+    }
+
+    @Test
+    public void getBundlesEmpty() throws Exception {
+        storageRegistry.register(MockValid.class);
+        Collection<Bundle<AbstractMock>> values = (Collection<Bundle<AbstractMock>>) storageRegistry.getBundles("");
+        assertEquals(0, values.size());
     }
 
     // TODO: Test loading of multiple versions of the same class
