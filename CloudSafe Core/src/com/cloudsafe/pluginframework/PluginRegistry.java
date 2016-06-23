@@ -32,6 +32,7 @@ public final class PluginRegistry<T extends Registrable & Creatable> extends Reg
     @Override
     public boolean register(Class klazz) {
         if (klazz == null) {
+            System.out.println("Registering a null class");
             return false;
         }
         if (!tclass.isAssignableFrom(klazz)) {

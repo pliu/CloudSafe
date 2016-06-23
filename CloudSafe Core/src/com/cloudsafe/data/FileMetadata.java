@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public final class FileMetadata implements Serializable {
 
-    // Must be incremented everytime this class is changed.
+    // Must be incremented every time this class is changed in an incompatible manner.
     private static final long serialVersionUID = 0L;
 
     private final String localFilename;
@@ -33,27 +33,7 @@ public final class FileMetadata implements Serializable {
      */
     public static FileMetadata getInstance(String localFilename, String description, String remoteFilename, byte[] key,
                                            byte[] IV) throws IllegalArgumentException {
-        if (localFilename == null || localFilename.equals("")) {
-            System.out.println("Instantiating FileMetadata with null or empty localFilename");
-            throw new IllegalArgumentException("Instantiating FileMetadata with null or empty localFilename");
-        }
-        if (description == null) {
-            System.out.println("Instantiating FileMetadata with null description");
-            throw new IllegalArgumentException("Instantiating FileMetadata with null description");
-        }
-        if (remoteFilename == null || remoteFilename.equals("")) {
-            System.out.println("Instantiating FileMetadata with null or empty remoteFilename");
-            throw new IllegalArgumentException("Instantiating FileMetadata with null or empty remoteFilename");
-        }
-        if (key == null) {
-            System.out.println("Instantiating FileMetadata with null key");
-            throw new IllegalArgumentException("Instantiating FileMetadata with null key");
-        }
-        if (IV == null) {
-            System.out.println("Instantiating FileMetadata with null IV");
-            throw new IllegalArgumentException("Instantiating FileMetadata with null IV");
-        }
-
+        validate(localFilename, description, remoteFilename, key, IV);
         return new FileMetadata(localFilename, description, remoteFilename, key, IV);
     }
 
@@ -114,6 +94,33 @@ public final class FileMetadata implements Serializable {
      */
     public byte[] getIV() {
         return Utils.copy(IV);
+    }
+
+    /**
+     *
+     */
+    private static void validate(String localFilename, String description, String remoteFilename, byte[] key, byte[] IV)
+            throws IllegalArgumentException {
+        if (localFilename == null || localFilename.equals("")) {
+            System.out.println("Instantiating FileMetadata with null or empty localFilename");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null or empty localFilename");
+        }
+        if (description == null) {
+            System.out.println("Instantiating FileMetadata with null description");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null description");
+        }
+        if (remoteFilename == null || remoteFilename.equals("")) {
+            System.out.println("Instantiating FileMetadata with null or empty remoteFilename");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null or empty remoteFilename");
+        }
+        if (key == null) {
+            System.out.println("Instantiating FileMetadata with null key");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null key");
+        }
+        if (IV == null) {
+            System.out.println("Instantiating FileMetadata with null IV");
+            throw new IllegalArgumentException("Instantiating FileMetadata with null IV");
+        }
     }
 
 }

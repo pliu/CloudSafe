@@ -78,8 +78,9 @@ public class PluginRegistryTest {
         assertFalse(storageRegistry.register(MockInvalidReturn4.class));
     }
 
-    // Tests whether PluginLoader and PluginRegistry can successfully load valid plugins (and exclude missing or invalid
-    // plugins) from jars in a directory using the jar's MANIFEST.MF to indicate which classes to load
+    // Tests whether Loader and PluginRegistry can successfully load valid plugins (and exclude missing or invalid
+    // plugins) from jars in a directory using the PLUGIN_MANIFEST_CLASS_KEY in the jar's MANIFEST.MF
+    // Tests whether Loader's can handle jars that are missing the PLUGIN_MANIFEST_CLASS_KEY or MANIFEST.MF entirely
     @Test
     public void loadPluginsFromDir() throws Exception {
         assertTrue(storageRegistry.loadPluginsFromDir("D:\\Work\\Programming\\CloudSafe\\test"));
@@ -98,7 +99,7 @@ public class PluginRegistryTest {
     }
 
     @Test
-    public void loadPluginsFromEmptyPath() throws Exception {
+    public void loadPluginsFromInvalidPath() throws Exception {
         assertFalse(storageRegistry.loadPluginsFromDir(""));
     }
 

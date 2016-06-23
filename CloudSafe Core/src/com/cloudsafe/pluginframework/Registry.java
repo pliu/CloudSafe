@@ -39,11 +39,14 @@ public abstract class Registry<T extends Registrable> {
     /**
      * Given a path, creates a Loader object and attempts to register classes from jars in the path.
      *
-     * @param path The String representing the path to the jars from which to register classes. Relies on Loader's
-     *             loadPluginsFromDir method to validate path.
+     * @param path The String representing the path to the jars from which to register classes.
      * @return Returns true if the path is valid and false otherwise.
      */
     public final boolean loadPluginsFromDir(String path) {
+        if (path == null) {
+            System.out.println("Directory path is null");
+            return false;
+        }
         Loader loader = new Loader(this);
         return loader.loadPluginsFromDir(path);
     }
@@ -78,6 +81,8 @@ public abstract class Registry<T extends Registrable> {
             if (versions != null) {
                 return new TreeSet<>(versions.values());
             }
+        } else {
+            System.out.println("Getting Bundles with null name");
         }
         return new TreeSet<>();
     }
@@ -126,6 +131,7 @@ public abstract class Registry<T extends Registrable> {
      */
     protected final Bundle<T> protectedGet(String name, String version) {
         if (name == null || version == null) {
+            System.out.println("Getting Bundle with null name or value");
             return null;
         }
         TreeMap<String, Bundle<T>> versions = registry.get(name);

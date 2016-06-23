@@ -9,14 +9,14 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import com.cloudsafe.config.Consts;
-
 /**
- * Loads valid classes, listed under the MANIFEST.MF's Consts.PLUGIN_MANIFEST_CLASS_KEY property, from jars in the given
+ * Loads valid classes, listed under the MANIFEST.MF's PLUGIN_MANIFEST_CLASS_KEY property, from jars in the given
  * directories and registers them in the given Registry.
  * The class is package local as it is only used by Registry's loadPluginsFromDir method.
  */
 final class Loader {
+
+    private static final String PLUGIN_MANIFEST_CLASS_KEY = "Plugin-Classes";
 
     private final Registry registry;
 
@@ -26,12 +26,9 @@ final class Loader {
 
     /**
      * Given a valid directory path, calls loadPluginsFromJar on each jar in the directory and returns true; false
-     * otherwise.
+     * otherwise. Relies on the Registry's loadPluginsFromDir method to ensure a non-null path.
      */
     boolean loadPluginsFromDir(String path) {
-        if (path == null) {
-            return false;
-        }
         File dir = new File(path);
         if (isDirectoryPath(dir)) {
             File[] files = dir.listFiles((file, name) -> {
@@ -49,7 +46,7 @@ final class Loader {
 
     /**
      * Given a jar, creates a new URLClassLoader and loads valid classes, listed under the MANIFEST.MF's
-     * "Plugin-Classes" property, and registers them in the given Registry.
+     * PLUGIN_MANIFEST_CLASS_KEY property, and registers them in the given Registry.
      * Since a new URLClassLoader is created for each jar, the classes in a given jar are isolated from classes in other
      * jars.
      * Relies on Registry's register method to type-check the loaded class.
@@ -74,7 +71,7 @@ final class Loader {
 
     /**
      * Given a jar, returns an Array of Strings of the classes to load from the jar as listed under the MANIFEST.MF's
-     * Consts.PLUGIN_MANIFEST_CLASS_KEY property.
+     * PLUGIN_MANIFEST_CLASS_KEY property.
      */
     private String[] getManifestClasses(File jar) {
         try {
@@ -82,20 +79,20 @@ final class Loader {
             Manifest manifest = jarFile.getManifest();
             if (manifest != null) {
                 Attributes properties = manifest.getMainAttributes();
-                String unparsed = properties.getValue(Consts.PLUGIN_MANIFEST_CLASS_KEY);
+                String unparsed = properties.getValue(PLUGIN_MANIFEST_CLASS_KEY);
                 if (unparsed != null) {
                     return parseString(unparsed);
                 } else {
-                    System.out.println("No Plugin-Classes in the manifest of " + jar.getPath());
-                    return new String[]{};
+                    System.out.println("No " + PLUGIN_MANIFEST_CLASS_KEY + " in the manifest of " + jar.getPath());
+                    return new String[0];
                 }
             } else {
                 System.out.println("No manifest in " + jar.getPath());
-                return new String[]{};
+                return new String[0];
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return new String[]{};
+            return new String[0];
         }
     }
 
