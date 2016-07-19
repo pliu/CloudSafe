@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * Registry for storing Registrables, mapped by name and version.
+ * Root class for Registries that store Registrables, mapped by name and version.
  */
 public abstract class Registry<T extends Registrable> {
 

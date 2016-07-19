@@ -31,9 +31,7 @@ final class Loader {
     boolean loadPluginsFromDir(String path) {
         File dir = new File(path);
         if (isDirectoryPath(dir)) {
-            File[] files = dir.listFiles((file, name) -> {
-                return name.endsWith(".jar");
-            });
+            File[] files = dir.listFiles((file, name) -> name.endsWith(".jar"));
             for (File file : files) {
                 loadPluginsFromJar(file);
             }

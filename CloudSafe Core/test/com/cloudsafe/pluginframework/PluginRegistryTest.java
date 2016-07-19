@@ -104,6 +104,12 @@ public class PluginRegistryTest {
     }
 
     @Test
+    public void loadPluginsFromNoJarFolder() throws Exception {
+        storageRegistry.loadPluginsFromDir("C:");
+        assertEquals(0, ((Set<String>) storageRegistry.getNames()).size());
+    }
+
+    @Test
     public void get() throws Exception {
         storageRegistry.loadPluginsFromDir("D:\\Work\\Programming\\CloudSafe\\test");
         AbstractMock test = storageRegistry.get("Valid", "1.0.0");
@@ -114,28 +120,28 @@ public class PluginRegistryTest {
     public void getNullName() throws Exception {
         storageRegistry.register(MockValid.class);
         AbstractMock test = storageRegistry.get(null, "1.0.0");
-        assertEquals(null, test);
+        assertNull(test);
     }
 
     @Test
     public void getNullVersion() throws Exception {
         storageRegistry.register(MockValid.class);
         AbstractMock test = storageRegistry.get("Valid", null);
-        assertEquals(null, test);
+        assertNull(test);
     }
 
     @Test
     public void getEmptyName() throws Exception {
         storageRegistry.register(MockValid.class);
         AbstractMock test = storageRegistry.get("", "1.0.0");
-        assertEquals(null, test);
+        assertNull(test);
     }
 
     @Test
     public void getEmptyVersion() throws Exception {
         storageRegistry.register(MockValid.class);
         AbstractMock test = storageRegistry.get("Valid", "");
-        assertEquals(null, test);
+        assertNull(test);
     }
 
     // Tests registry isolation from the Iterable returned by getNames

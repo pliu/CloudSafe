@@ -1,11 +1,11 @@
 package com.cloudsafe.shared;
 
 /**
- * Root (abstract) class for storage adaptors. Classes that are registrable in PluginRegistry must extend this class.
- * <p>
+ * Root class for storage adaptors.
+ *
  * Next Steps:
  * - look into locking/concurrency control to ensure that while a file is being uploaded, downloaded, or deleted, it
- * will not be accessed by another process that could result in an inconsistent state
+ *   will not be accessed by another process that could result in an inconsistent state
  */
 public abstract class AbstractStorageAdaptor implements Registrable, Creatable {
 
@@ -18,6 +18,8 @@ public abstract class AbstractStorageAdaptor implements Registrable, Creatable {
     public abstract boolean deleteData(String path);
 
     /**
+     * Checks if the path is occupied.
+     *
      * @param path The path to be checked.
      * @return Returns true if the path is already occupied and false otherwise.
      */
@@ -27,6 +29,7 @@ public abstract class AbstractStorageAdaptor implements Registrable, Creatable {
      * Uploads the data to the given path.
      *
      * @param path The path at which to upload data.
+     * @param data A byte[] representation of the data to upload.
      * @return Returns true if the data is successfully uploaded to the path or false otherwise.
      */
     public abstract boolean uploadData(String path, byte[] data);
@@ -40,13 +43,17 @@ public abstract class AbstractStorageAdaptor implements Registrable, Creatable {
     public abstract byte[] downloadData(String path);
 
     /**
-     * @return Returns true if the connection is open by the end of the method or false otherwise.
+     * Sets up any requirements for the functioning of the storage adaptor.
+     *
+     * @return Returns true if all requirements are set up by the end of the method or false otherwise.
      */
-    public abstract boolean openConnection();
+    public abstract boolean setup();
 
     /**
-     * @return Returns true if the connection is closed by the end of the method or false otherwise.
+     * Cleans up any overhead that was required by the storage adaptor.
+     *
+     * @return Returns true if all overhead is cleaned up by the end of the method or false otherwise.
      */
-    public abstract boolean closeConnection();
+    public abstract boolean cleanup();
 
 }
