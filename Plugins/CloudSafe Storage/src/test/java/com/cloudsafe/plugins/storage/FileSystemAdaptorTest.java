@@ -1,5 +1,7 @@
 package com.cloudsafe.plugins.storage;
 
+import com.cloudsafe.pluginframework.PluginRegistry;
+import com.cloudsafe.shared.AbstractStorageAdaptor;
 import org.apache.commons.io.FileUtils;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -46,6 +48,15 @@ public class FileSystemAdaptorTest {
         assertTrue(new File("C:/CloudSafeTest/test/output/test.txt").exists());
         FileUtils.deleteDirectory(new File("C:/CloudSafeTest/"));
         assertFalse(new File("C:/CloudSafeTest/").exists());
+    }
+
+    @Test
+    public void registrableCreatable() throws Exception {
+        PluginRegistry<AbstractStorageAdaptor> registry = new PluginRegistry<>(AbstractStorageAdaptor.class);
+        assertTrue(registry.register(FileSystemAdaptor.class));
+        AbstractStorageAdaptor adaptor = registry.get(FileSystemAdaptor.getName(), FileSystemAdaptor.getVersion());
+        assertNotNull(adaptor);
+        assertEquals(FileSystemAdaptor.class, adaptor.getClass());
     }
 
 }

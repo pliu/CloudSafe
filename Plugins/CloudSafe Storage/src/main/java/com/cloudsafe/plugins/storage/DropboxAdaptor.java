@@ -49,7 +49,7 @@ public class DropboxAdaptor extends AbstractStorageAdaptor {
     }
 
     @Override
-    public boolean openConnection() {
+    public boolean setup() {
         DbxAppInfo appInfo = new DbxAppInfo(APP_KEY, APP_SECRET);
 
         DbxRequestConfig config = new DbxRequestConfig("CloudSafe/0.01", Locale.getDefault().toString());
@@ -78,7 +78,7 @@ public class DropboxAdaptor extends AbstractStorageAdaptor {
     }
 
     @Override
-    public boolean closeConnection() {
+    public boolean cleanup() {
         return false;
     }
 

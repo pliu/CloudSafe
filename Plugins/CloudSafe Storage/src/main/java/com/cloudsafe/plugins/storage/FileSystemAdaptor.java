@@ -11,6 +11,38 @@ import java.io.IOException;
  */
 public class FileSystemAdaptor extends AbstractStorageAdaptor {
 
+    private static final String NAME = "FileSystemAdaptor";
+    private static final String VERSION = "1.0.0";
+    private static final String DESCRIPTION = "Saves data to the local file system.";
+
+    /**
+     * @return Returns an instance of FileSystemAdaptor.
+     */
+    public static FileSystemAdaptor newInstance() {
+        return new FileSystemAdaptor();
+    }
+
+    /**
+     * @return Returns the name of this plugin.
+     */
+    public static String getName() {
+        return NAME;
+    }
+
+    /**
+     * @return Returns the version of FileSystemAdaptor.
+     */
+    public static String getVersion() {
+        return VERSION;
+    }
+
+    /**
+     * @return Returns the description of FileSystemAdaptor.
+     */
+    public static String getDescription() {
+        return DESCRIPTION;
+    }
+
     /**
      * Deletes the data at the given path.
      *
