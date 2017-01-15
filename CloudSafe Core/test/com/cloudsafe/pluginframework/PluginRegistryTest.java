@@ -83,7 +83,7 @@ public class PluginRegistryTest {
     // Tests whether Loader's can handle jars that are missing the PLUGIN_MANIFEST_CLASS_KEY or MANIFEST.MF entirely
     @Test
     public void loadPluginsFromDir() throws Exception {
-        assertTrue(storageRegistry.loadPluginsFromDir("D:\\Work\\Programming\\CloudSafe\\test"));
+        assertTrue(storageRegistry.loadPluginsFromDir("mocks"));
         Set<String> names = (Set<String>) storageRegistry.getNames();
         assertEquals(1, names.size());
         String name = (String) names.toArray()[0];
@@ -111,7 +111,7 @@ public class PluginRegistryTest {
 
     @Test
     public void get() throws Exception {
-        storageRegistry.loadPluginsFromDir("D:\\Work\\Programming\\CloudSafe\\test");
+        storageRegistry.loadPluginsFromDir("mocks");
         AbstractMock test = storageRegistry.get("Valid", "1.0.0");
         assertTrue(test.testMethod());
     }
