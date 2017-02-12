@@ -43,7 +43,7 @@ public class FileSystemAdaptorTest {
     }
 
     @Test
-    public void nonexistantPath() throws Exception {
+    public void nonexistentPath() throws Exception {
         adaptor.uploadData("C:/CloudSafeTest/test/output/test.txt", testOutput.getBytes());
         assertTrue(new File("C:/CloudSafeTest/test/output/test.txt").exists());
         FileUtils.deleteDirectory(new File("C:/CloudSafeTest/"));
